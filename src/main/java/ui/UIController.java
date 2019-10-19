@@ -35,6 +35,7 @@ public class UIController {
                     break;
                 case ELSE:
                     OutputParser.writeBack_ELSE();
+                    currentCommand = null;
                     break;
             }
         }
