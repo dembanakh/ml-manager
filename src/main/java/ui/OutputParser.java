@@ -37,7 +37,7 @@ public class OutputParser {
             builder.append(task.getNeuralNet());
             builder.append(" (id ");
             builder.append(id);
-            builder.append(")");
+            builder.append(")\n");
         });
         System.out.print(builder);
     }

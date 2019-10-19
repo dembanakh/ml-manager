@@ -1,63 +1,41 @@
 package ui;
 
 import client.ClientController;
-import server.Task;
-import ui.commands.Command;
+import ui.actions.UIAction;
+import ui.actions.UIActions;
 
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class UIController {
 
-    ClientController controller;
+    static ClientController controller;
     Scanner scanner;
 
-    Command currentCommand;
+    public static Stack<UIAction> memory = new Stack<>();
 
     public UIController() {
         scanner = new Scanner(System.in);
         controller = new ClientController();
-        currentCommand = null;
+        memory.push(UIActions.ROOT);
     }
 
     public void start() {
-        while (true) {
-            if (currentCommand == null)
-                stageRoot();
-            else switch (currentCommand) {
-                case EXIT:
-                    return;
-                case TRAIN:
-                    stageTrain();
-                    break;
-                case TEST:
-                    stageTest();
-                    break;
-                case ELSE:
-                    OutputParser.writeBack_ELSE();
-                    currentCommand = null;
-                    break;
-            }
+        while (running()) {
+            memory.push(memory.peek().execute(scanner));
         }
     }
 
-    private void stageRoot() {
-        OutputParser.writePrompt();
-        String input = scanner.nextLine();
-        currentCommand = InputParser.parseLine(input);
+    public static UIAction getPreviousAction() {
+        memory.pop();
+        return memory.pop();
     }
 
-    private void stageTrain() {
-        Map<Integer, Task> activeTasks = controller.getActiveTasks();
-        if (activeTasks.isEmpty()) {
-            OutputParser.writeBack_TRAIN();
-        } else {
-            OutputParser.writeBack_TRAIN(activeTasks);
-        }
+    public static ClientController getClientController() {
+        return controller;
     }
 
-    private void stageTest() {
-
+    private boolean running() {
+        return !memory.isEmpty() && !(memory.peek() == null);
     }
 
 }
