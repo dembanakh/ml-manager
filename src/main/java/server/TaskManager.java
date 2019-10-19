@@ -15,4 +15,14 @@ public class TaskManager {
         return activeTasks;
     }
 
+    public void addTask(Task task) {
+        int i = 0;
+        while (true) {
+            if (activeTasks.containsKey(i)) i++;
+            else break;
+        }
+
+        activeTasks.put(i, task);
+    }
+
 }

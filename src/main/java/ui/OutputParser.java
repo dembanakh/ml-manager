@@ -28,7 +28,18 @@ public class OutputParser {
     }
 
     public static void writeBack_TRAIN(Map<Integer, Task> tasks) {
-
+        StringBuilder builder = new StringBuilder();
+        builder.append("Choose one of the existing tasks (command: task <id>), create a new one (command: new) or go back to main menu (command: back).\n");
+        builder.append("Tasks:\n");
+        tasks.forEach((id, task) -> {
+            builder.append(task.getDataset());
+            builder.append(" with ");
+            builder.append(task.getNeuralNet());
+            builder.append(" (id ");
+            builder.append(id);
+            builder.append(")");
+        });
+        System.out.print(builder);
     }
 
 }

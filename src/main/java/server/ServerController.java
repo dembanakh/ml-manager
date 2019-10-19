@@ -13,6 +13,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
 
     public void start() {
         taskManager = new TaskManager();
+        taskManager.addTask(new Task("MNIST", "VGG16"));
     }
 
     public Map<Integer, Task> getActiveTasks() {
