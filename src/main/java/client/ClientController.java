@@ -4,6 +4,7 @@ import server.ServerAPI;
 import server.ServerController;
 import server.Task;
 
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,8 +16,7 @@ public class ClientController {
 
     public ClientController() {
         try {
-            Registry registry = LocateRegistry.getRegistry(null);
-            server = (ServerAPI) registry.lookup("ServerAPI");
+            server = (ServerAPI) Naming.lookup("//localhost/ServerController");
         } catch (Exception e) {
             e.printStackTrace();
         }
