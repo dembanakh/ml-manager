@@ -29,7 +29,7 @@ public class OutputParser {
         builder.append("Current task: ");
         builder.append(dataset != null ? dataset : "?");
         builder.append(" + ");
-        builder.append(net != null ? dataset : "?");
+        builder.append(net != null ? net : "?");
         builder.append(".");
         System.out.println(builder);
     }
