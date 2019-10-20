@@ -20,7 +20,7 @@ public class ServerMain {
     public static void main(String[] args) throws RemoteException, MalformedURLException {
         setPolicy();
         ServerController controller = new ServerController();
-        Naming.rebind("rmi://40.87.143.114/ServerAPI", controller);
+        Naming.rebind("rmi://10.0.0.4/ServerAPI", controller);
 
         System.out.println("Server ready!");
 
