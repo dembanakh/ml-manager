@@ -1,6 +1,8 @@
 package utility;
 
-public class Dataset {
+import java.io.Serializable;
+
+public class Dataset implements Serializable {
 
     private final String name;
 

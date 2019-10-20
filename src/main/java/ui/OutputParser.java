@@ -72,6 +72,7 @@ public class OutputParser {
             builder.append(datasets.get(i));
             builder.append(", ");
         }
+        builder.append(datasets.get(datasets.size()-1));
         builder.append(".\n");
         System.out.print(builder);
     }
@@ -88,6 +89,7 @@ public class OutputParser {
             builder.append(nets.get(i));
             builder.append(", ");
         }
+        builder.append(nets.get(nets.size()-1));
         builder.append(".\n");
         System.out.print(builder);
     }

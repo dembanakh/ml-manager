@@ -1,6 +1,8 @@
 package utility;
 
-public class NeuralNet {
+import java.io.Serializable;
+
+public class NeuralNet implements Serializable {
 
     private final String name;
 
