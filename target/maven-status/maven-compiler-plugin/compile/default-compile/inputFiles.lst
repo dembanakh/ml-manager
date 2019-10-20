@@ -8,6 +8,7 @@
 /home/dembanakh/ml-manager/src/main/java/ui/InputParser.java
 /home/dembanakh/ml-manager/src/main/java/ui/actions/UIAction.java
 /home/dembanakh/ml-manager/src/main/java/server/TaskManager.java
+/home/dembanakh/ml-manager/src/main/java/client/Remote.java
 /home/dembanakh/ml-manager/src/main/java/ui/UIController.java
 /home/dembanakh/ml-manager/src/main/java/client/ClientController.java
 /home/dembanakh/ml-manager/src/main/java/main/Main.java
