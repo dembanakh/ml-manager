@@ -5,6 +5,7 @@ import server.Task;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Map;
 
 public class ClientController {
@@ -112,6 +113,26 @@ public class ClientController {
             server.changeTask_neuralNet(id, dataset);
         } catch (RemoteException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Remote
+    public static List<String> getDatasets() {
+        try {
+            return server.getDatasets();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Remote
+    public static List<String> getNeuralNets() {
+        try {
+            return server.getNeuralNets();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

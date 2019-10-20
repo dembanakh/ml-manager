@@ -1,7 +1,13 @@
 package server;
 
+import utility.Dataset;
+import utility.Utility;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 class TaskManager {
 
@@ -9,6 +15,16 @@ class TaskManager {
 
     TaskManager() {
         activeTasks = new HashMap<>();
+    }
+
+    void load() throws FileNotFoundException {
+        String sourcePath = Utility.ROOT + "tasks.src";
+        Scanner scanner = new Scanner(new File(sourcePath));
+        int i = 0;
+        while (scanner.hasNextLine()) {
+            String[] names = scanner.nextLine().split(" ");
+            activeTasks.put(i++, new Task(names[0], names[1]));
+        }
     }
 
     Map<Integer, Task> getActiveTasks() {

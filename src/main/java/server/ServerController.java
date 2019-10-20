@@ -1,20 +1,43 @@
 package server;
 
+import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 import java.util.Map;
 
 public class ServerController extends UnicastRemoteObject implements ServerAPI {
 
     private TaskManager taskManager;
+    private DatasetManager datasetManager;
+    private NeuralNetManager neuralNetManager;
 
     public ServerController() throws RemoteException {
+        taskManager = new TaskManager();
+        datasetManager = new DatasetManager();
+        neuralNetManager = new NeuralNetManager();
     }
 
     public void start() {
-        taskManager = new TaskManager();
-
         System.out.println("start");
+
+        try {
+            datasetManager.load();
+        } catch (FileNotFoundException e) {
+            System.err.println("datasets.src file not found or one of data directories doesn't exist!");
+        }
+
+        try {
+            neuralNetManager.load();
+        } catch (FileNotFoundException e) {
+            System.err.println("datasets.src file not found or one of data directories doesn't exist!");
+        }
+
+        try {
+            taskManager.load();
+        } catch (FileNotFoundException e) {
+            System.err.println("tasks.src file not found!");
+        }
     }
 
     @Override
@@ -62,6 +85,16 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         System.out.println("OUT: " + taskManager.hasTask(id));
         taskManager.changeTask_neuralNet(id, net);
         return true;
+    }
+
+    @Override
+    public List<String> getDatasets() {
+        return datasetManager.getDatasetNames();
+    }
+
+    @Override
+    public List<String> getNeuralNets() {
+        return neuralNetManager.getNeuralNetNames();
     }
 
     @Override

@@ -5,8 +5,8 @@ import server.Task;
 import ui.InputParser;
 import ui.OutputParser;
 import ui.UIController;
-import ui.commands.Command;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -41,15 +41,31 @@ public enum UIActions implements UIAction {
             ClientController.setTask(null);
             OutputParser.writeBack_TASKS_CREATE();
 
-            OutputParser.writeBack_TASKS_CREATE_dataset();
-            String dataset = scanner.nextLine();
+            List<String> datasets = ClientController.getDatasets();
+            List<String> neuralNets = ClientController.getNeuralNets();
 
-            OutputParser.writeBack_TASKS_CREATE_net();
+            if (datasets == null || neuralNets == null) {
+                System.err.println("Couldn't load datasets list or neuralNets list from server!");
+                return null;
+            }
+
+            OutputParser.writeBack_TASKS_CREATE_dataset(datasets);
+            String dataset = scanner.nextLine();
+            if (!datasets.contains(dataset)) {
+                System.err.println("There is no such dataset!\nAborting...");
+                return UIActions.BACK;
+            }
+
+            OutputParser.writeBack_TASKS_CREATE_net(neuralNets);
             String net = scanner.nextLine();
+            if (!neuralNets.contains(net)) {
+                System.err.println("There is no such neural network architecture!\nAborting...");
+                return UIActions.BACK;
+            }
 
             ClientController.addTask(new Task(dataset, net));
 
-            System.out.println("Added.\n");
+            System.out.println("Added.");
             return UIActions.MAIN;
         }
     },
@@ -64,6 +80,7 @@ public enum UIActions implements UIAction {
             } else {
                 ClientController.setTask(null);
             }
+            System.out.println("Deleted.");
             return UIActions.BACK;
         }
     },
@@ -71,7 +88,7 @@ public enum UIActions implements UIAction {
     TASKS_CHANGE {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset(), currentTask.getNeuralNet());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
 
             OutputParser.writeBack_TASKS_CHANGE();
             String input = scanner.nextLine();
@@ -82,12 +99,24 @@ public enum UIActions implements UIAction {
     TASKS_CHANGE_DATASET {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset(), currentTask.getNeuralNet());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
 
-            OutputParser.writeBack_TASKS_CHANGE_DATASET(currentTask.getID());
+            List<String> datasets = ClientController.getDatasets();
+            if (datasets == null) {
+                System.err.println("Couldn't load datasets list from server!");
+                return null;
+            }
+
+            OutputParser.writeBack_TASKS_CHANGE_DATASET(currentTask.getID(), datasets);
             String input = scanner.nextLine();
+            if (!datasets.contains(input)) {
+                System.err.println("There is no such dataset!\nAborting...");
+                return UIActions.BACK;
+            }
+
             ClientController.changeTask_dataset(currentTask.getID(), input);
 
+            System.out.println("Changed.");
             ClientController.setTask(null);
             UIController.memory.pop();
             return UIActions.BACK;
@@ -97,12 +126,24 @@ public enum UIActions implements UIAction {
     TASKS_CHANGE_NEURALNET {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset(), currentTask.getNeuralNet());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
 
-            OutputParser.writeBack_TASKS_CHANGE_NEURALNET(currentTask.getID());
+            List<String> networks = ClientController.getNeuralNets();
+            if (networks == null) {
+                System.err.println("Couldn't load neuralNets list from server!");
+                return null;
+            }
+
+            OutputParser.writeBack_TASKS_CHANGE_NEURALNET(currentTask.getID(), networks);
             String input = scanner.nextLine();
+            if (!networks.contains(input)) {
+                System.err.println("There is no such neural network architecture!\nAborting...");
+                return UIActions.BACK;
+            }
+
             ClientController.changeTask_neuralNet(currentTask.getID(), input);
 
+            System.out.println("Changed.");
             ClientController.setTask(null);
             UIController.memory.pop();
             return UIActions.BACK;
@@ -126,9 +167,9 @@ public enum UIActions implements UIAction {
     TEST_ID {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset(), currentTask.getNeuralNet());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
 
-            OutputParser.writeBack_TEST_ID(currentTask.getNeuralNet());
+            OutputParser.writeBack_TEST_ID(currentTask.getNeuralNet().getName());
 
             String input = scanner.nextLine();
             return InputParser.parseLine(input, this);
@@ -152,9 +193,9 @@ public enum UIActions implements UIAction {
     TRAIN_ID {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset(), currentTask.getNeuralNet());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
 
-            OutputParser.writeBack_TRAIN_ID(currentTask.getDataset(), currentTask.getNeuralNet());
+            OutputParser.writeBack_TRAIN_ID(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
 
             String input = scanner.nextLine();
             return InputParser.parseLine(input, this);

@@ -65,7 +65,7 @@ public class InputParser {
                 return UIActions.ERROR;
             case TRAIN_ID:
                 if (line.startsWith(Command.YES.getUserLine())) return UIActions.CLIENT_TRAIN;
-                if (line.startsWith(Command.NO.getUserLine())) return UIActions.MAIN;
+                if (line.startsWith(Command.NO.getUserLine())) return UIActions.BACK;
                 if (line.startsWith(Command.BACK.getUserLine())) return UIActions.BACK;
                 if (line.startsWith(Command.MAIN.getUserLine())) return UIActions.MAIN;
                 return UIActions.ERROR;
