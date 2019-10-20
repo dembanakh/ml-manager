@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 class NeuralNetManager {
 
-    private List<NeuralNet> neuralNets;
+    private List<NeuralNet> neuralNets = new ArrayList<>();
 
     void load() throws FileNotFoundException {
         String sourcePath = Utility.ROOT + "networks.src";
