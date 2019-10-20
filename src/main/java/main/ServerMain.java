@@ -6,7 +6,6 @@ import server.ServerController;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
 public class ServerMain {
 
@@ -20,7 +19,7 @@ public class ServerMain {
     public static void main(String[] args) throws RemoteException, MalformedURLException {
         setPolicy();
         ServerController controller = new ServerController();
-        Naming.rebind("rmi://10.0.0.4/ServerAPI", controller);
+        Naming.rebind("ServerAPI", controller);
 
         System.out.println("Server ready!");
 

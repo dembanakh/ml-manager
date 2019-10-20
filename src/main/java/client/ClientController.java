@@ -16,7 +16,7 @@ public class ClientController {
 
     public ClientController() {
         try {
-            server = (ServerAPI) Naming.lookup("rmi://40.87.143.114:1099/ServerAPI");
+            server = (ServerAPI) Naming.lookup("rmi://40.87.143.114/ServerAPI");
             System.out.println(server);
         } catch (Exception e) {
             e.printStackTrace();
