@@ -19,8 +19,8 @@ class NeuralNetManager {
         Scanner scanner = new Scanner(new File(sourcePath));
         while (scanner.hasNextLine()) {
             String name = scanner.nextLine();
-            File dataFolder = new File(Utility.WEIGHTS + name);
-            if (!dataFolder.exists()) {
+            File weightsPath = new File(Utility.WEIGHTS + name + ".pth");
+            if (!weightsPath.exists()) {
                 neuralNets.clear();
                 throw new FileNotFoundException();
             }

@@ -16,8 +16,6 @@ class DatasetManager {
 
     void load() throws FileNotFoundException {
         String sourcePath = Utility.ROOT + "datasets.src";
-        System.out.println(sourcePath);
-        System.out.println(new File(sourcePath).exists());
         Scanner scanner = new Scanner(new File(sourcePath));
         while (scanner.hasNextLine()) {
             String name = scanner.nextLine();
