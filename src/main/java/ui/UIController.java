@@ -25,11 +25,6 @@ public class UIController {
         }
     }
 
-    public static UIAction getPreviousAction() {
-        memory.pop();
-        return memory.pop();
-    }
-
     public static ClientController getClientController() {
         return controller;
     }

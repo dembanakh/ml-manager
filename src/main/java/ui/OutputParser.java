@@ -1,5 +1,6 @@
 package ui;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import server.Task;
 import ui.commands.Command;
 
@@ -20,11 +21,51 @@ public class OutputParser {
     }
 
     public static void writeBack_ELSE() {
-        System.out.println("Sorry, but there is no such command");
+        System.out.println("Sorry, but there is no such command in current context.");
+    }
+
+    public static void writeBack_currentTask(String dataset, String net) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Current task: ");
+        builder.append(dataset != null ? dataset : "?");
+        builder.append(" + ");
+        builder.append(net != null ? dataset : "?");
+        builder.append(".");
+        System.out.println(builder);
     }
 
     public static void writeBack_TRAIN() {
         System.out.println("There is no active tasks. You can create one (command: new) or go back to main menu (command: back)");
+    }
+
+    public static void writeBack_TRAIN_NEW_dataset() {
+        System.out.print("Enter the name of dataset.\ndataset = ");
+    }
+
+    public static void writeBack_TRAIN_NEW_net() {
+        System.out.print("Enter the name of neural network.\nneuralnet = ");
+    }
+
+    public static void writeBack_TRAIN_NEW(String dataset, String net) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Do you really want to train this new task on dataset ");
+        builder.append(dataset);
+        builder.append(" using neural network ");
+        builder.append(net);
+        builder.append("? [Yes|no]\n");
+        builder.append("You can also go back (command: back) or to main menu (command: main).");
+        System.out.println(builder);
+    }
+
+    public static void writeBack_TRAIN_ID(String dataset, String net) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Do you really want to retrain this task on dataset ");
+        builder.append(dataset);
+        builder.append(" using neural network ");
+        builder.append(net);
+        builder.append("? [Yes|no]\n");
+        builder.append("You can also go back (command: back) or to main menu (command: main).");
+        System.out.println(builder);
     }
 
     public static void writeBack_TRAIN(Map<Integer, Task> tasks) {

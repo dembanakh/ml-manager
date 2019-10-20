@@ -1,7 +1,10 @@
 package ui.commands;
 
 public enum Command {
-    EXIT("exit"), TRAIN("train"), TEST("test"), ELSE(""); // to add sth else
+    EXIT("exit"), TRAIN("train"), TEST("test"), ELSE(""),
+    NEW("new"), ID("id"),
+    YES("Yes"), NO("no"),
+    BACK("back"), MAIN("main"); // to add sth else
 
     private String userLine;
 
