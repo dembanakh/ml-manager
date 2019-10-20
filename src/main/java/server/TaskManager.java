@@ -3,26 +3,45 @@ package server;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TaskManager {
+class TaskManager {
 
     private Map<Integer, Task> activeTasks;
 
-    public TaskManager() {
-        activeTasks = new HashMap<Integer, Task>();
+    TaskManager() {
+        activeTasks = new HashMap<>();
     }
 
-    public Map<Integer, Task> getActiveTasks() {
+    Map<Integer, Task> getActiveTasks() {
         return activeTasks;
     }
 
-    public void addTask(Task task) {
+    int addTask(Task task) {
         int i = 0;
         while (true) {
-            if (activeTasks.containsKey(i)) i++;
+            if (hasTask(i)) i++;
             else break;
         }
 
+        task.setID(i);
         activeTasks.put(i, task);
+
+        return i;
+    }
+
+    void deleteTask(Integer id) {
+        activeTasks.remove(id);
+    }
+
+    boolean hasTask(Integer id) {
+        return activeTasks.containsKey(id);
+    }
+
+    void changeTask_dataset(Integer id, String dataset) {
+        activeTasks.get(id).setDataset(dataset);
+    }
+
+    void changeTask_neuralNet(Integer id, String net) {
+        activeTasks.get(id).setNeuralNet(net);
     }
 
 }

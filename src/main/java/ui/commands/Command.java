@@ -1,10 +1,12 @@
 package ui.commands;
 
 public enum Command {
-    EXIT("exit"), TRAIN("train"), TEST("test"), ELSE(""),
+    EXIT("exit"), TRAIN("train"), TEST("test"), TASKS("tasks"),
     NEW("new"), ID("task"),
     YES("Yes"), NO("no"),
-    BACK("back"), MAIN("main"); // to add sth else
+    BACK("back"), MAIN("main"),
+    CREATE("create"), DELETE("delete"), CHANGE("change"),
+    DATASET("dataset"), NEURALNET("network"); // to add sth else
 
     private String userLine;
 

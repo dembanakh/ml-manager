@@ -1,7 +1,6 @@
 package client;
 
 import server.ServerAPI;
-import server.ServerController;
 import server.Task;
 
 import java.rmi.Naming;
@@ -16,7 +15,7 @@ public class ClientController {
 
     public ClientController() {
         try {
-            server = (ServerAPI) Naming.lookup("rmi://40.87.143.114/ServerAPI");
+            server = (ServerAPI) Naming.lookup("rmi://40.87.143.114:1099/ServerAPI");
             System.out.println(server);
         } catch (Exception e) {
             e.printStackTrace();
@@ -24,6 +23,7 @@ public class ClientController {
         currentTask = null;
     }
 
+    @Remote
     public Map<Integer, Task> getActiveTasks() {
         try {
             return server.getActiveTasks();
@@ -33,6 +33,7 @@ public class ClientController {
         }
     }
 
+    @Remote
     public static boolean setTask(Integer id) {
         if (id == null) {
             currentTask = null;
@@ -41,11 +42,12 @@ public class ClientController {
 
         Task task = null;
         try {
-            task = server.getActiveTasks().get(id);
+            task = server.getActiveTaskById(id);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
         if (task == null) {
+            currentTask = null;
             return false;
         } else {
             currentTask = task;
@@ -53,16 +55,64 @@ public class ClientController {
         }
     }
 
+    @Remote
     public static Integer addTask(Task task) {
-        return 0;
+        try {
+            return server.addTask(task);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     public static Task getTask() {
         return currentTask;
     }
 
+    @Remote
     public static void trainCurrentTask() {
+        try {
+            server.trainTask(currentTask.getID());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Remote
+    public static float testCurrentTask() {
+        return 0f;
+    }
+
+    public static boolean processTestPath(String path) {
+
+        return false;
+    }
+
+    @Remote
+    public static void deleteTask(Integer id) {
+        try {
+            server.deleteTask(id);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Remote
+    public static void changeTask_dataset(Integer id, String dataset) {
+        try {
+            server.changeTask_dataset(id, dataset);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Remote
+    public static void changeTask_neuralNet(Integer id, String dataset) {
+        try {
+            server.changeTask_neuralNet(id, dataset);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 }
