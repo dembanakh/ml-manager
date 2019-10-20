@@ -44,4 +44,13 @@ public class Task implements Serializable {
     public void setID(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(dataset.toString());
+        builder.append(" + ");
+        builder.append(neuralNet.toString());
+        return builder.toString();
+    }
 }

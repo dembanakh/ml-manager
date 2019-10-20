@@ -18,4 +18,9 @@ public class Dataset implements Serializable {
         return Utility.DATASETS + name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }

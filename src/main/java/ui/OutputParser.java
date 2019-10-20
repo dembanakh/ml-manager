@@ -45,9 +45,7 @@ public class OutputParser {
         StringBuilder builder = new StringBuilder();
         builder.append("Active tasks:\n");
         tasks.forEach((id, task) -> {
-            builder.append(task.getDataset());
-            builder.append(" with ");
-            builder.append(task.getNeuralNet());
+            builder.append(task.toString());
             builder.append(" (id ");
             builder.append(id);
             builder.append(")\n");

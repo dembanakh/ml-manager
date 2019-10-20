@@ -18,4 +18,9 @@ public class NeuralNet implements Serializable {
         return Utility.WEIGHTS + name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }
