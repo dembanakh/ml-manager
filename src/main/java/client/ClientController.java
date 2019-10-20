@@ -19,7 +19,7 @@ public class ClientController {
 
     public ClientController() {
         try {
-            server = (ServerAPI) Naming.lookup("//localhost/ServerController");
+            server = (ServerAPI) Naming.lookup("//40.87.143.114/ServerController");
         } catch (Exception e) {
             e.printStackTrace();
         }

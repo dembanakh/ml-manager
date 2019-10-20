@@ -9,7 +9,7 @@ public class ServerMain {
     public static void main(String[] args) {
         try {
             ServerController controller = new ServerController();
-            Naming.rebind("//localhost/ServerController", controller);
+            Naming.rebind("//40.87.143.114/ServerController", controller);
 
             System.out.println("Server ready!");
 
