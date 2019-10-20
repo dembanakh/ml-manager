@@ -3,4 +3,5 @@ grant {
 	permission java.net.SocketPermission "localhost:1099", "connect, resolve";
 	permission java.net.SocketPermission "127.0.0.1:1099", "connect, resolve";
 	permission java.net.SocketPermission "localhost:80", "connect, resolve";
+	permission java.net.SocketPermission "40.87.143.114:80-65535", "connect, accept, resolve";
 };
