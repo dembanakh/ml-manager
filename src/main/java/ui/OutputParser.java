@@ -133,9 +133,7 @@ public class OutputParser {
         builder.append("Choose one of the existing tasks (command: task <id>) or go back to main menu (command: back).\n");
         builder.append("Tasks:\n");
         tasks.forEach((id, task) -> {
-            builder.append(task.getDataset());
-            builder.append(" with ");
-            builder.append(task.getNeuralNet());
+            builder.append(task.toString());
             builder.append(" (id ");
             builder.append(id);
             builder.append(")\n");
@@ -147,25 +145,14 @@ public class OutputParser {
         StringBuilder builder = new StringBuilder();
         builder.append("Testing current task using neural network ");
         builder.append(net);
-        builder.append(". Enter a full path to directory with testing data.\n");
+        builder.append(". Enter a full path to directory with testing data preceding it with either (command: local <path>) or (command: remote <path>).\n");
         builder.append("You can also go back (command: back) or to main menu (command: main).\n");
         builder.append("path = ");
         System.out.print(builder);
     }
 
     public static void writeBack_TRAIN() {
-        System.out.println("There is no active tasks. You can create one (command: new) or go back to main menu (command: back)");
-    }
-
-    public static void writeBack_TRAIN_NEW(String dataset, String net) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Do you really want to train this new task on dataset ");
-        builder.append(dataset);
-        builder.append(" using neural network ");
-        builder.append(net);
-        builder.append("? [Yes|no]\n");
-        builder.append("You can also go back (command: back) or to main menu (command: main).");
-        System.out.println(builder);
+        System.out.println("There is no active tasks to train. Go back to main menu (command: back) and create a new one from there.");
     }
 
     public static void writeBack_TRAIN_ID(String dataset, String net) {
@@ -181,12 +168,10 @@ public class OutputParser {
 
     public static void writeBack_TRAIN(Map<Integer, Task> tasks) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Choose one of the existing tasks (command: task <id>), create a new one (command: new) or go back to main menu (command: back).\n");
+        builder.append("Choose one of the existing tasks (command: task <id>) or go back to main menu (command: back).\n");
         builder.append("Tasks:\n");
         tasks.forEach((id, task) -> {
-            builder.append(task.getDataset());
-            builder.append(" with ");
-            builder.append(task.getNeuralNet());
+            builder.append(task.toString());
             builder.append(" (id ");
             builder.append(id);
             builder.append(")\n");

@@ -202,7 +202,17 @@ public enum UIActions implements UIAction {
         }
     },
 
-    CLIENT_TEST {
+    CLIENT_TEST_LOCALDATA {
+        public UIAction execute(Scanner scanner) {
+            System.out.println("Testing...");
+            float accuracy = ClientController.testCurrentTask();
+            System.out.println("Done - " + accuracy);
+            ClientController.setTask(null);
+            return UIActions.MAIN;
+        }
+    },
+
+    CLIENT_TEST_REMOTEDATA {
         public UIAction execute(Scanner scanner) {
             System.out.println("Testing...");
             float accuracy = ClientController.testCurrentTask();

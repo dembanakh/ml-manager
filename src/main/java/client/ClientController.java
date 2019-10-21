@@ -84,7 +84,12 @@ public class ClientController {
         return 0f;
     }
 
-    public static boolean processTestPath(String path) {
+    public static boolean processLocalTestPath(String path) {
+
+        return false;
+    }
+
+    public static boolean processRemoteTestPath(String path) {
 
         return false;
     }

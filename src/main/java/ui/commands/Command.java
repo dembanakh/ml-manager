@@ -6,7 +6,8 @@ public enum Command {
     YES("Yes"), NO("no"),
     BACK("back"), MAIN("main"),
     CREATE("create"), DELETE("delete"), CHANGE("change"),
-    DATASET("dataset"), NEURALNET("network"); // to add sth else
+    DATASET("dataset"), NEURALNET("network"),
+    LOCAL("local"), REMOTE("remote"); // to add sth else
 
     private String userLine;
 
