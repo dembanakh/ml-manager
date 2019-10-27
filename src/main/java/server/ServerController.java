@@ -11,11 +11,13 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     private TaskManager taskManager;
     private DatasetManager datasetManager;
     private NeuralNetManager neuralNetManager;
+    private MLManager mlManager;
 
     public ServerController() throws RemoteException {
         taskManager = new TaskManager();
         datasetManager = new DatasetManager();
         neuralNetManager = new NeuralNetManager();
+        mlManager = new MLManager();
     }
 
     public void start() {
@@ -99,8 +101,13 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
 
     @Override
     public void trainTask(Integer id) {
-        System.out.println("Training task " + id + "...");
-        //TODO: use JNI to implement C++ training
+        Task task = taskManager.getTask(id);
+        if (task == null) {
+            System.err.println("ERROR: No such task in map.");
+            return;
+        }
+        System.out.println("IN: trainTask " + task.getDataset() + " " + task.getNeuralNet());
+        mlManager.train(task.getDataset(), task.getNeuralNet());
     }
 
 }

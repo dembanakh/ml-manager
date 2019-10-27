@@ -44,6 +44,10 @@ class TaskManager {
         return i;
     }
 
+    Task getTask(Integer id) {
+        return activeTasks.get(id);
+    }
+
     void deleteTask(Integer id) {
         activeTasks.remove(id);
     }
