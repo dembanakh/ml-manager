@@ -9,6 +9,6 @@ class MLManager {
         System.loadLibrary("native");
     }
 
-    native boolean train(Dataset dataset, NeuralNet net);
+    native boolean train(String datasetPath, String weightsPath);
 
 }

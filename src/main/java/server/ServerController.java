@@ -107,7 +107,8 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
             return;
         }
         System.out.println("IN: trainTask " + task.getDataset() + " " + task.getNeuralNet());
-        mlManager.train(task.getDataset(), task.getNeuralNet());
+        boolean success = mlManager.train(task.getDataset().getDirectory(), task.getNeuralNet().getWeights());
+        System.out.println("OUT: " + success);
     }
 
 }
