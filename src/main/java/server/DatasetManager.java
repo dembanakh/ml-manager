@@ -40,6 +40,7 @@ class DatasetManager {
         for (Dataset d : datasets) {
             if (d.getName().equals(name)) return true;
         }
+        System.out.println("There is no " + name);
         return false;
     }
 
