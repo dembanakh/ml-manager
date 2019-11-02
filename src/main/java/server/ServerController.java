@@ -28,13 +28,13 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         } catch (FileNotFoundException e) {
             System.err.println("datasets.src file not found or one of data directories doesn't exist!");
         }
-
+System.out.println("datasets loaded");
         try {
             neuralNetManager.load();
         } catch (FileNotFoundException e) {
             System.err.println("networks.src file not found or one of data directories doesn't exist!");
         }
-
+System.out.println("nets loaded");
         try {
             taskManager.load(datasetManager, neuralNetManager);
         } catch (FileNotFoundException e) {

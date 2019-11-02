@@ -26,6 +26,7 @@ class TaskManager {
             String dataset = names[0];
             String net = names[1];
             if (!dataMan.hasDataset(dataset) || !netMan.hasNeuralNet(net)) {
+                System.out.println("throwing");
                 activeTasks.clear();
                 dataMan.clear();
                 netMan.clear();
