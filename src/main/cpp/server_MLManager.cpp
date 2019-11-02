@@ -24,9 +24,9 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
 
     if (PyCallable_Check(pFunc)) {
         pArgs = PyTuple_New(2);
-        pValue = PyString_FromString(env->GetStringUTFChars(env, dataset, NULL));
+        pValue = PyString_FromString(env->GetStringUTFChars(dataset, NULL));
         PyTuple_SetItem(pArgs, 0, pValue);
-        pValue = PyString_FromString(env->GetStringUTFChars(env, architecture, NULL));
+        pValue = PyString_FromString(env->GetStringUTFChars(architecture, NULL));
         PyTuple_SetItem(pArgs, 1, pValue);
 
         PyObject_CallObject(pFunc, pArgs);
