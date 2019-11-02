@@ -15,7 +15,7 @@ public class Task implements Serializable {
 
     public Task(String dataset, String neuralNet) {
         this.dataset = new Dataset(dataset);
-        this.neuralNet = new NeuralNet(neuralNet);
+        this.neuralNet = NeuralNet.valueOf(neuralNet);
         trained = false;
     }
 
@@ -33,7 +33,7 @@ public class Task implements Serializable {
     }
 
     public void setNeuralNet(String neuralNet) {
-        this.neuralNet = new NeuralNet(neuralNet);
+        this.neuralNet = NeuralNet.valueOf(neuralNet);
         trained = false;
     }
 

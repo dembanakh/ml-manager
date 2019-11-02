@@ -1,5 +1,9 @@
 package server;
 
+import utility.Dataset;
+import utility.NeuralNet;
+import utility.Utility;
+
 import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -33,6 +37,8 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
             neuralNetManager.load();
         } catch (FileNotFoundException e) {
             System.err.println("networks.src file not found or one of data directories doesn't exist!");
+        } catch (NoSuchMLObjectException e) {
+            System.err.println("networks.src file contains illegal architecture name!");
         }
 
         try {
@@ -108,8 +114,10 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
             System.err.println("ERROR: No such task in map.");
             return;
         }
-        System.out.println("IN: trainTask " + task.getDataset() + " " + task.getNeuralNet());
-        boolean success = mlManager.train(task.getDataset().getDirectory(), task.getNeuralNet().getWeights());
+        Dataset ds = task.getDataset();
+        NeuralNet nn = task.getNeuralNet();
+        System.out.println("IN: trainTask " + ds + " " + nn);
+        boolean success = mlManager.train((ds.getName().equals(Utility.IMAGENET)) ? ds.getName() : ds.getDirectory(), task.getNeuralNet().toString());
         System.out.println("OUT: " + success);
     }
 

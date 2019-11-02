@@ -14,30 +14,31 @@ class NeuralNetManager {
 
     private List<NeuralNet> neuralNets = new ArrayList<>();
 
-    void load() throws FileNotFoundException {
+    void load() throws NoSuchMLObjectException, FileNotFoundException {
         String sourcePath = Utility.ROOT + "networks.src";
         Scanner scanner = new Scanner(new File(sourcePath));
         while (scanner.hasNextLine()) {
             String name = scanner.nextLine();
-            File weightsPath = new File(Utility.WEIGHTS + name + ".pth");
-            if (!weightsPath.exists()) {
+            try {
+                NeuralNet value = NeuralNet.valueOf(name);
+                neuralNets.add(value);
+            } catch (IllegalArgumentException e) {
                 this.clear();
-                throw new FileNotFoundException();
+                throw new NoSuchMLObjectException();
             }
-            neuralNets.add(new NeuralNet(name));
         }
     }
 
     List<String> getNeuralNetNames() {
         List<String> names = new ArrayList<>();
         for (NeuralNet n : neuralNets)
-            names.add(n.getName());
+            names.add(n.toString());
         return names;
     }
 
     boolean hasNeuralNet(String name) {
         for (NeuralNet nn : neuralNets) {
-            if (nn.getName().equals(name)) return true;
+            if (nn.toString().equals(name)) return true;
         }
         return false;
     }

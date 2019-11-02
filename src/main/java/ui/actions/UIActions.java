@@ -88,7 +88,7 @@ public enum UIActions implements UIAction {
     TASKS_CHANGE {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
             OutputParser.writeBack_TASKS_CHANGE();
             String input = scanner.nextLine();
@@ -99,7 +99,7 @@ public enum UIActions implements UIAction {
     TASKS_CHANGE_DATASET {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
             List<String> datasets = ClientController.getDatasets();
             if (datasets == null) {
@@ -126,7 +126,7 @@ public enum UIActions implements UIAction {
     TASKS_CHANGE_NEURALNET {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
             List<String> networks = ClientController.getNeuralNets();
             if (networks == null) {
@@ -167,9 +167,9 @@ public enum UIActions implements UIAction {
     TEST_ID {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
-            OutputParser.writeBack_TEST_ID(currentTask.getNeuralNet().getName());
+            OutputParser.writeBack_TEST_ID(currentTask.getNeuralNet().toString());
 
             String input = scanner.nextLine();
             return InputParser.parseLine(input, this);
@@ -193,9 +193,9 @@ public enum UIActions implements UIAction {
     TRAIN_ID {
         public UIAction execute(Scanner scanner) {
             Task currentTask = ClientController.getTask();
-            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
+            OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
-            OutputParser.writeBack_TRAIN_ID(currentTask.getDataset().getName(), currentTask.getNeuralNet().getName());
+            OutputParser.writeBack_TRAIN_ID(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
             String input = scanner.nextLine();
             return InputParser.parseLine(input, this);

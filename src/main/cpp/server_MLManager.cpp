@@ -12,6 +12,7 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
     PyRun_SimpleString("import os");
     PyRun_SimpleString("os.chdir('target/cpp')");
     PyRun_SimpleString("sys.path.append(os.getcwd())");
+    PyRun_SimpleString("from keras.applications import *");
 
     pName = PyString_FromString("py_train");
     pModule = PyImport_Import(pName);
