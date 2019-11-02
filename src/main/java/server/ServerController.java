@@ -28,13 +28,13 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         } catch (FileNotFoundException e) {
             System.err.println("datasets.src file not found or one of data directories doesn't exist!");
         }
-System.out.println(datasetManager.getDatasetNames().size());
+
         try {
             neuralNetManager.load();
         } catch (FileNotFoundException e) {
             System.err.println("networks.src file not found or one of data directories doesn't exist!");
         }
-System.out.println(neuralNetManager.getNeuralNetNames().size());
+
         try {
             taskManager.load(datasetManager, neuralNetManager);
         } catch (FileNotFoundException e) {
@@ -104,6 +104,8 @@ System.out.println(neuralNetManager.getNeuralNetNames().size());
     @Override
     public void trainTask(Integer id) {
         Task task = taskManager.getTask(id);
+        System.out.println(id);
+        System.out.println(taskManager.getActiveTasks().size());
         if (task == null) {
             System.err.println("ERROR: No such task in map.");
             return;
