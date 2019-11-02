@@ -104,8 +104,6 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     @Override
     public void trainTask(Integer id) {
         Task task = taskManager.getTask(id);
-        System.out.println(id);
-        System.out.println(taskManager.getActiveTasks().size());
         if (task == null) {
             System.err.println("ERROR: No such task in map.");
             return;
