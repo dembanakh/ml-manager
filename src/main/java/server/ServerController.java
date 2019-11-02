@@ -36,9 +36,11 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         }
 
         try {
-            taskManager.load();
+            taskManager.load(datasetManager, neuralNetManager);
         } catch (FileNotFoundException e) {
             System.err.println("tasks.src file not found!");
+        } catch (NoSuchMLObjectException e) {
+            System.err.println("A task from tasks.src contains non-existing dataset or neural network!");
         }
     }
 

@@ -21,11 +21,12 @@ class DatasetManager {
             String name = scanner.nextLine();
             File dataFolder = new File(Utility.DATASETS + name);
             if (!dataFolder.exists()) {
-                datasets.clear();
+                this.clear();
                 throw new FileNotFoundException();
             }
             datasets.add(new Dataset(name));
         }
+        datasets.add(new Dataset(Utility.IMAGENET));
     }
 
     List<String> getDatasetNames() {
@@ -33,6 +34,17 @@ class DatasetManager {
         for (Dataset d : datasets)
             names.add(d.getName());
         return names;
+    }
+
+    boolean hasDataset(String name) {
+        for (Dataset d : datasets) {
+            if (d.getName().equals(name)) return true;
+        }
+        return false;
+    }
+
+    void clear() {
+        datasets.clear();
     }
 
 }

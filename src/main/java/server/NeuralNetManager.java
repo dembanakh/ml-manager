@@ -21,7 +21,7 @@ class NeuralNetManager {
             String name = scanner.nextLine();
             File weightsPath = new File(Utility.WEIGHTS + name + ".pth");
             if (!weightsPath.exists()) {
-                neuralNets.clear();
+                this.clear();
                 throw new FileNotFoundException();
             }
             neuralNets.add(new NeuralNet(name));
@@ -33,6 +33,17 @@ class NeuralNetManager {
         for (NeuralNet n : neuralNets)
             names.add(n.getName());
         return names;
+    }
+
+    boolean hasNeuralNet(String name) {
+        for (NeuralNet nn : neuralNets) {
+            if (nn.getName().equals(name)) return true;
+        }
+        return false;
+    }
+
+    void clear() {
+        neuralNets.clear();
     }
 
 }

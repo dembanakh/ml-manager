@@ -17,12 +17,20 @@ class TaskManager {
         activeTasks = new HashMap<>();
     }
 
-    void load() throws FileNotFoundException {
+    void load(DatasetManager dataMan, NeuralNetManager netMan) throws FileNotFoundException, NoSuchMLObjectException {
         String sourcePath = Utility.ROOT + "tasks.src";
         Scanner scanner = new Scanner(new File(sourcePath));
         int i = 0;
         while (scanner.hasNextLine()) {
             String[] names = scanner.nextLine().split(" ");
+            String dataset = names[0];
+            String net = names[1];
+            if (!dataMan.hasDataset(dataset) || !netMan.hasNeuralNet(net)) {
+                activeTasks.clear();
+                dataMan.clear();
+                netMan.clear();
+                throw new NoSuchMLObjectException();
+            }
             activeTasks.put(i++, new Task(names[0], names[1]));
         }
     }
