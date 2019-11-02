@@ -21,6 +21,7 @@ class TaskManager {
         String sourcePath = Utility.ROOT + "tasks.src";
         Scanner scanner = new Scanner(new File(sourcePath));
         int i = 0;
+        System.out.println(scanner.hasNextLine());
         while (scanner.hasNextLine()) {
             String[] names = scanner.nextLine().split(" ");
             String dataset = names[0];
