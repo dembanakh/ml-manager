@@ -47,7 +47,7 @@ public class ClientController {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        System.out.println(task.getID());
+
         if (task == null) {
             currentTask = null;
             return false;
