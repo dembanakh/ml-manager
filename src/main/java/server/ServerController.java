@@ -53,8 +53,6 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
 
     @Override
     public Task getActiveTaskById(Integer id) {
-        System.out.println(id);
-        System.out.println(taskManager.getActiveTasks());
         Task task = taskManager.getActiveTasks().get(id);
         System.out.println("IN: getActiveTaskById");
         System.out.println("OUT: " + task);
