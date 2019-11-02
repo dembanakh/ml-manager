@@ -22,6 +22,8 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
     pFunc = PyDict_GetItemString(pDict, "train");
     //std::cout << "got pFunc = " << pFunc << std::endl;
 
+    int returnValue = 0;
+
     if (PyCallable_Check(pFunc)) {
         pArgs = PyTuple_New(2);
         pValue = PyString_FromString(env->GetStringUTFChars(dataset, NULL));
@@ -29,8 +31,8 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
         pValue = PyString_FromString(env->GetStringUTFChars(architecture, NULL));
         PyTuple_SetItem(pArgs, 1, pValue);
 
-        PyObject_CallObject(pFunc, pArgs);
-	    //if (pValue != NULL) std::cout << "Control check: return value = " << PyInt_AsLong(pValue) << std::endl;
+        pValue = PyObject_CallObject(pFunc, pArgs);
+	    returnValue = (int) PyInt_AsLong(pValue);
         Py_DECREF(pArgs);
         Py_DECREF(pValue);
     } else {
@@ -44,6 +46,6 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
 
     Py_Finalize();
 
-	return 1;
+	return returnValue;
 }
 

@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 class TaskManager {
 
-    private Map<Integer, Task> activeTasks;
+    private Map<String, Task> activeTasks;
 
     TaskManager() {
         activeTasks = new HashMap<>();
@@ -22,52 +22,44 @@ class TaskManager {
         Scanner scanner = new Scanner(new File(sourcePath));
         while (scanner.hasNextLine()) {
             String[] names = scanner.nextLine().split(" ");
-            String dataset = names[0];
-            String net = names[1];
+            String title = names[0];
+            String dataset = names[1];
+            String net = names[2];
             if (!dataMan.hasDataset(dataset) || !netMan.hasNeuralNet(net)) {
                 activeTasks.clear();
                 dataMan.clear();
                 netMan.clear();
                 throw new NoSuchMLObjectException();
             }
-            this.addTask(new Task(names[0], names[1]));
+            this.addTask(new Task(title, dataset, net));
         }
     }
 
-    Map<Integer, Task> getActiveTasks() {
+    Map<String, Task> getActiveTasks() {
         return activeTasks;
     }
 
-    int addTask(Task task) {
-        int i = 0;
-        while (true) {
-            if (hasTask(i)) i++;
-            else break;
-        }
-
-        task.setID(i);
-        activeTasks.put(i, task);
-
-        return i;
+    void addTask(Task task) {
+        activeTasks.put(task.getTitle(), task);
     }
 
-    Task getTask(Integer id) {
+    Task getTask(String id) {
         return activeTasks.get(id);
     }
 
-    void deleteTask(Integer id) {
+    void deleteTask(String id) {
         activeTasks.remove(id);
     }
 
-    boolean hasTask(Integer id) {
+    boolean hasTask(String id) {
         return activeTasks.containsKey(id);
     }
 
-    void changeTask_dataset(Integer id, String dataset) {
+    void changeTask_dataset(String id, String dataset) {
         activeTasks.get(id).setDataset(dataset);
     }
 
-    void changeTask_neuralNet(Integer id, String net) {
+    void changeTask_neuralNet(String id, String net) {
         activeTasks.get(id).setNeuralNet(net);
     }
 

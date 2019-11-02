@@ -51,14 +51,14 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     }
 
     @Override
-    public Map<Integer, Task> getActiveTasks() {
+    public Map<String, Task> getActiveTasks() {
         System.out.println("IN: getActiveTasks");
         System.out.println("OUT: " + taskManager.getActiveTasks());
         return taskManager.getActiveTasks();
     }
 
     @Override
-    public Task getActiveTaskById(Integer id) {
+    public Task getActiveTaskById(String id) {
         Task task = taskManager.getActiveTasks().get(id);
         System.out.println("IN: getActiveTaskById");
         System.out.println("OUT: " + task);
@@ -66,21 +66,21 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     }
 
     @Override
-    public Integer addTask(Task task) {
+    public void addTask(Task task) {
         System.out.println("IN: addTask");
-        System.out.println("OUT: " + task.getID());
-        return taskManager.addTask(task);
+        System.out.println("OUT: " + task.getTitle());
+        taskManager.addTask(task);
     }
 
     @Override
-    public void deleteTask(Integer id) {
+    public void deleteTask(String id) {
         System.out.println("IN: deleteTask");
         System.out.println("OUT: -");
         taskManager.deleteTask(id);
     }
 
     @Override
-    public boolean changeTask_dataset(Integer id, String dataset) {
+    public boolean changeTask_dataset(String id, String dataset) {
         System.out.println("IN: changeTask_dataset");
         if (!taskManager.hasTask(id)) return false;
         System.out.println("OUT: " + taskManager.hasTask(id));
@@ -89,7 +89,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     }
 
     @Override
-    public boolean changeTask_neuralNet(Integer id, String net) {
+    public boolean changeTask_neuralNet(String id, String net) {
         System.out.println("IN: changeTask_neuralNet");
         if (!taskManager.hasTask(id)) return false;
         System.out.println("OUT: " + taskManager.hasTask(id));
@@ -108,7 +108,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     }
 
     @Override
-    public void trainTask(Integer id) {
+    public void trainTask(String id) {
         Task task = taskManager.getTask(id);
         if (task == null) {
             System.err.println("ERROR: No such task in map.");

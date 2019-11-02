@@ -25,7 +25,7 @@ public class ClientController {
     }
 
     @Remote
-    public Map<Integer, Task> getActiveTasks() {
+    public Map<String, Task> getActiveTasks() {
         try {
             return server.getActiveTasks();
         } catch (RemoteException e) {
@@ -35,7 +35,7 @@ public class ClientController {
     }
 
     @Remote
-    public static boolean setTask(Integer id) {
+    public static boolean setTask(String id) {
         if (id == null) {
             currentTask = null;
             return true;
@@ -58,12 +58,11 @@ public class ClientController {
     }
 
     @Remote
-    public static Integer addTask(Task task) {
+    public static void addTask(Task task) {
         try {
-            return server.addTask(task);
+            server.addTask(task);
         } catch (RemoteException e) {
             e.printStackTrace();
-            return -1;
         }
     }
 
@@ -74,7 +73,7 @@ public class ClientController {
     @Remote
     public static void trainCurrentTask() {
         try {
-            server.trainTask(currentTask.getID());
+            server.trainTask(currentTask.getTitle());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -96,7 +95,7 @@ public class ClientController {
     }
 
     @Remote
-    public static void deleteTask(Integer id) {
+    public static void deleteTask(String id) {
         try {
             server.deleteTask(id);
         } catch (RemoteException e) {
@@ -105,7 +104,7 @@ public class ClientController {
     }
 
     @Remote
-    public static void changeTask_dataset(Integer id, String dataset) {
+    public static void changeTask_dataset(String id, String dataset) {
         try {
             server.changeTask_dataset(id, dataset);
         } catch (RemoteException e) {
@@ -114,7 +113,7 @@ public class ClientController {
     }
 
     @Remote
-    public static void changeTask_neuralNet(Integer id, String dataset) {
+    public static void changeTask_neuralNet(String id, String dataset) {
         try {
             server.changeTask_neuralNet(id, dataset);
         } catch (RemoteException e) {

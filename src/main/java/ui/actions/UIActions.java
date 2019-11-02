@@ -24,7 +24,7 @@ public enum UIActions implements UIAction {
 
     TASKS {
         public UIAction execute(Scanner scanner) {
-            Map<Integer, Task> activeTasks = UIController.getClientController().getActiveTasks();
+            Map<String, Task> activeTasks = UIController.getClientController().getActiveTasks();
             if (activeTasks.isEmpty()) {
                 OutputParser.writeBack_TASKS();
             } else {
@@ -49,6 +49,9 @@ public enum UIActions implements UIAction {
                 return null;
             }
 
+            OutputParser.writeBack_TASKS_CREATE_title();
+            String title = scanner.nextLine();
+
             OutputParser.writeBack_TASKS_CREATE_dataset(datasets);
             String dataset = scanner.nextLine();
             if (!datasets.contains(dataset)) {
@@ -63,7 +66,7 @@ public enum UIActions implements UIAction {
                 return UIActions.BACK;
             }
 
-            ClientController.addTask(new Task(dataset, net));
+            ClientController.addTask(new Task(title, dataset, net));
 
             System.out.println("Added.");
             return UIActions.MAIN;
@@ -72,7 +75,7 @@ public enum UIActions implements UIAction {
 
     TASKS_DELETE {
         public UIAction execute(Scanner scanner) {
-            Integer id = ClientController.getTask().getID();
+            String id = ClientController.getTask().getTitle();
             OutputParser.writeBack_TASKS_DELETE(id);
             String check = scanner.nextLine();
             if (InputParser.parseSimpleBoolean(check)) {
@@ -107,14 +110,14 @@ public enum UIActions implements UIAction {
                 return null;
             }
 
-            OutputParser.writeBack_TASKS_CHANGE_DATASET(currentTask.getID(), datasets);
+            OutputParser.writeBack_TASKS_CHANGE_DATASET(currentTask.getTitle(), datasets);
             String input = scanner.nextLine();
             if (!datasets.contains(input)) {
                 System.err.println("There is no such dataset!\nAborting...");
                 return UIActions.BACK;
             }
 
-            ClientController.changeTask_dataset(currentTask.getID(), input);
+            ClientController.changeTask_dataset(currentTask.getTitle(), input);
 
             System.out.println("Changed.");
             ClientController.setTask(null);
@@ -134,14 +137,14 @@ public enum UIActions implements UIAction {
                 return null;
             }
 
-            OutputParser.writeBack_TASKS_CHANGE_NEURALNET(currentTask.getID(), networks);
+            OutputParser.writeBack_TASKS_CHANGE_NEURALNET(currentTask.getTitle(), networks);
             String input = scanner.nextLine();
             if (!networks.contains(input)) {
                 System.err.println("There is no such neural network architecture!\nAborting...");
                 return UIActions.BACK;
             }
 
-            ClientController.changeTask_neuralNet(currentTask.getID(), input);
+            ClientController.changeTask_neuralNet(currentTask.getTitle(), input);
 
             System.out.println("Changed.");
             ClientController.setTask(null);
@@ -152,7 +155,7 @@ public enum UIActions implements UIAction {
 
     TEST {
         public UIAction execute(Scanner scanner) {
-            Map<Integer, Task> activeTasks = UIController.getClientController().getActiveTasks();
+            Map<String, Task> activeTasks = UIController.getClientController().getActiveTasks();
             if (activeTasks.isEmpty()) {
                 OutputParser.writeBack_TEST();
             } else {
@@ -178,7 +181,7 @@ public enum UIActions implements UIAction {
 
     TRAIN {
         public UIAction execute(Scanner scanner) {
-            Map<Integer, Task> activeTasks = UIController.getClientController().getActiveTasks();
+            Map<String, Task> activeTasks = UIController.getClientController().getActiveTasks();
             if (activeTasks.isEmpty()) {
                 OutputParser.writeBack_TRAIN();
             } else {

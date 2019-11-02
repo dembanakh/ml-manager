@@ -41,7 +41,7 @@ public class OutputParser {
         System.out.println("There is no active tasks. You can create a new one (command: create) or go back to main menu (command: back).");
     }
 
-    public static void writeBack_TASKS(Map<Integer, Task> tasks) {
+    public static void writeBack_TASKS(Map<String, Task> tasks) {
         StringBuilder builder = new StringBuilder();
         builder.append("Active tasks:\n");
         tasks.forEach((id, task) -> {
@@ -56,6 +56,10 @@ public class OutputParser {
 
     public static void writeBack_TASKS_CREATE() {
         System.out.println("Creating new task: dataset = ? + neuralNetwork = ?.");
+    }
+
+    public static void writeBack_TASKS_CREATE_title() {
+        System.out.println("Enter the title of the new task. Mind that it will be used as a unique identifier ans must not contain spaces.\ntitle = ");
     }
 
     public static void writeBack_TASKS_CREATE_dataset(List<String> datasets) {
@@ -92,7 +96,7 @@ public class OutputParser {
         System.out.print(builder);
     }
 
-    public static void writeBack_TASKS_DELETE(int id) {
+    public static void writeBack_TASKS_DELETE(String id) {
         StringBuilder builder = new StringBuilder();
         builder.append("Are you sure you want to delete task #");
         builder.append(id);
@@ -104,7 +108,7 @@ public class OutputParser {
         System.out.println("You can change the dataset that the task is trained on (command: dataset) or the neural network architecture that the task uses (command: network).\nYou may also go back (command: back) or to the main menu (command: main).");
     }
 
-    public static void writeBack_TASKS_CHANGE_DATASET(int id, List<String> datasets) {
+    public static void writeBack_TASKS_CHANGE_DATASET(String id, List<String> datasets) {
         writeBack_listDatasets(datasets);
 
         StringBuilder builder = new StringBuilder();
@@ -114,7 +118,7 @@ public class OutputParser {
         System.out.println(builder);
     }
 
-    public static void writeBack_TASKS_CHANGE_NEURALNET(int id, List<String> nets) {
+    public static void writeBack_TASKS_CHANGE_NEURALNET(String id, List<String> nets) {
         writeBack_listNetworks(nets);
 
         StringBuilder builder = new StringBuilder();
@@ -128,7 +132,7 @@ public class OutputParser {
         System.out.println("There is no active tasks. Go back to main menu (command: back) and create a new one from there.");
     }
 
-    public static void writeBack_TEST(Map<Integer, Task> tasks) {
+    public static void writeBack_TEST(Map<String, Task> tasks) {
         StringBuilder builder = new StringBuilder();
         builder.append("Choose one of the existing tasks (command: task <id>) or go back to main menu (command: back).\n");
         builder.append("Tasks:\n");
@@ -166,7 +170,7 @@ public class OutputParser {
         System.out.println(builder);
     }
 
-    public static void writeBack_TRAIN(Map<Integer, Task> tasks) {
+    public static void writeBack_TRAIN(Map<String, Task> tasks) {
         StringBuilder builder = new StringBuilder();
         builder.append("Choose one of the existing tasks (command: task <id>) or go back to main menu (command: back).\n");
         builder.append("Tasks:\n");

@@ -7,16 +7,19 @@ import java.io.Serializable;
 
 public class Task implements Serializable {
 
-    private Integer id = -1;
+    private String title;
 
     private Dataset dataset;
     private NeuralNet neuralNet;
-    private boolean trained;
 
-    public Task(String dataset, String neuralNet) {
+    public Task(String title, String dataset, String neuralNet) {
+        this.title = title;
         this.dataset = new Dataset(dataset);
         this.neuralNet = NeuralNet.valueOf(neuralNet);
-        trained = false;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public Dataset getDataset() {
@@ -25,7 +28,6 @@ public class Task implements Serializable {
 
     public void setDataset(String dataset) {
         this.dataset = new Dataset(dataset);
-        trained = false;
     }
 
     public NeuralNet getNeuralNet() {
@@ -34,15 +36,6 @@ public class Task implements Serializable {
 
     public void setNeuralNet(String neuralNet) {
         this.neuralNet = NeuralNet.valueOf(neuralNet);
-        trained = false;
-    }
-
-    public Integer getID() {
-        return id;
-    }
-
-    public void setID(int id) {
-        this.id = id;
     }
 
     @Override

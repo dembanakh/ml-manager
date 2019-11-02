@@ -18,13 +18,13 @@ public class InputParser {
             case TASKS:
                 if (line.startsWith(Command.CREATE.getUserLine())) return UIActions.TASKS_CREATE;
                 if (line.startsWith(Command.DELETE.getUserLine())) {
-                    if (ClientController.setTask(Integer.parseInt(line.split(" ")[1])))
+                    if (ClientController.setTask(line.split(" ")[1]))
                         return UIActions.TASKS_DELETE;
                     else
                         return UIActions.ERROR;
                 }
                 if (line.startsWith(Command.CHANGE.getUserLine())) {
-                    if (ClientController.setTask(Integer.parseInt(line.split(" ")[1])))
+                    if (ClientController.setTask(line.split(" ")[1]))
                         return UIActions.TASKS_CHANGE;
                     else
                         return UIActions.ERROR;
@@ -39,7 +39,7 @@ public class InputParser {
                 return UIActions.ERROR;
             case TEST:
                 if (line.startsWith(Command.ID.getUserLine())) {
-                    if (ClientController.setTask(Integer.parseInt(line.split(" ")[1])))
+                    if (ClientController.setTask(line.split(" ")[1]))
                         return UIActions.TEST_ID;
                     else
                         return UIActions.ERROR;
@@ -58,7 +58,7 @@ public class InputParser {
                 }
             case TRAIN:
                 if (line.startsWith(Command.ID.getUserLine())) {
-                    if (ClientController.setTask(Integer.parseInt(line.split(" ")[1])))
+                    if (ClientController.setTask(line.split(" ")[1]))
                         return UIActions.TRAIN_ID;
                     else
                         return UIActions.ERROR;
