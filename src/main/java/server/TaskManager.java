@@ -53,6 +53,8 @@ class TaskManager {
             dos.writeUTF(" ");
             dos.writeUTF(task.getNeuralNet().toString());
             dos.writeUTF("\n");
+            dos.close();
+            fos.close();
         } catch (FileNotFoundException e) {
             System.err.println("File tasks.src not found!");
         } catch (IOException e) {
