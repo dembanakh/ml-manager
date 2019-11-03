@@ -20,12 +20,14 @@ class Database {
     }
 
     private void init() {
+        /*
         DBCollection datasets = database.getCollection("datasets");
         DBObject mnist = new BasicDBObject("_id", "mnist")
                 .append("name", "MNIST");
         DBObject coco = new BasicDBObject("_id", "coco")
                 .append("name", "COCO");
         datasets.insert(mnist, coco);
+        */
         //Testing
         DBCollection tasks = database.getCollection("tasks");
         DBObject test = Database.toDBObject(new Task("test", "IMAGENET", "MobileNet"));
