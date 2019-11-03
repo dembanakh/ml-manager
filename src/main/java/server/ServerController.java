@@ -58,7 +58,9 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     @Override
     public void refreshTasks() {
         try {
+            System.out.println("IN: refreshTasks");
             taskManager.load(datasetManager, neuralNetManager);
+            System.out.println("OUT: -");
         } catch (NoSuchMLObjectException e) {
             System.err.println("A task from tasks.src contains non-existing dataset or neural network!");
         }
