@@ -70,6 +70,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         System.out.println("IN: addTask");
         System.out.println("OUT: " + task.getTitle());
         taskManager.addTask(task);
+        TaskManager.addTaskToSourceFile(task);
     }
 
     @Override

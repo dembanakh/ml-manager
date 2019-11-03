@@ -40,10 +40,9 @@ class TaskManager {
 
     void addTask(Task task) {
         activeTasks.put(task.getTitle(), task);
-        addTaskToSourceFile(task);
     }
 
-    private void addTaskToSourceFile(Task task) {
+    static void addTaskToSourceFile(Task task) {
         try {
             FileOutputStream fos = new FileOutputStream(sourcePath);
             DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(fos));
