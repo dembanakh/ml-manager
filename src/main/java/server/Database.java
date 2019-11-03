@@ -48,12 +48,12 @@ class Database {
 
     void changeTask_dataset(String id, String dataset) {
         DBCollection tasks = database.getCollection("tasks");
-        tasks.findAndModify(new BasicDBObject("title", id), new BasicDBObject("dataset", dataset));
+        tasks.findAndModify(new BasicDBObject("title", id), new BasicDBObject("$set", new BasicDBObject("dataset", dataset)));
     }
 
     void changeTask_neuralNet(String id, String net) {
         DBCollection tasks = database.getCollection("tasks");
-        tasks.findAndModify(new BasicDBObject("title", id), new BasicDBObject("net", net));
+        tasks.findAndModify(new BasicDBObject("title", id), new BasicDBObject("$set", new BasicDBObject("net", net)));
     }
 
     private static DBObject toDBObject(Task task) {
