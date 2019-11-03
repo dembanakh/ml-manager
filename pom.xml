@@ -25,6 +25,9 @@
                     <executable>java</executable>
                     <arguments>
                         <argument>-Djava.library.path=/home/dembanakh/ml-manager/target/cpp</argument>
+                        <argument>-Djava.rmi.useLocalHostname=false</argument>
+                        <argument>-Djava.rmi.server.hostname=40.87.143.114</argument>
+                        <argument>-Djava.security.policy=server.policy</argument>
                         <argument>-classpath</argument>
                         <classpath />
                         <argument>main.ServerMain</argument>
