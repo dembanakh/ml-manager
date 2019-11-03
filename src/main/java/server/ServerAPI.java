@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface ServerAPI extends Remote {
     Map<String, Task> getActiveTasks() throws RemoteException;
+    void refreshTasks() throws RemoteException;
     Task getActiveTaskById(String id) throws RemoteException;
     void addTask(Task task) throws RemoteException;
     void deleteTask(String id) throws RemoteException;

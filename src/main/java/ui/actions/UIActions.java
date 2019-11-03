@@ -36,6 +36,14 @@ public enum UIActions implements UIAction {
         }
     },
 
+    TASKS_REFRESH {
+        public UIAction execute(Scanner scanner) {
+            UIController.getClientController().refreshTasks();
+            UIController.memory.pop();
+            return UIController.memory.pop();
+        }
+    },
+
     TASKS_CREATE {
         public UIAction execute(Scanner scanner) {
             ClientController.setTask(null);

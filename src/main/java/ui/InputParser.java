@@ -16,6 +16,7 @@ public class InputParser {
                 if (line.startsWith(Command.TASKS.getUserLine())) return UIActions.TASKS;
                 return UIActions.ERROR;
             case TASKS:
+                if (line.startsWith(Command.REFRESH.getUserLine())) return UIActions.TASKS_REFRESH;
                 if (line.startsWith(Command.CREATE.getUserLine())) return UIActions.TASKS_CREATE;
                 if (line.startsWith(Command.DELETE.getUserLine())) {
                     if (ClientController.setTask(line.split(" ")[1]))

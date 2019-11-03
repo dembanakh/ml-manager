@@ -39,6 +39,7 @@ public class OutputParser {
 
     public static void writeBack_TASKS() {
         System.out.println("There is no active tasks. You can create a new one (command: create) or go back to main menu (command: back).");
+        System.out.println("To refresh a list of active tasks use (command: refresh).");
     }
 
     public static void writeBack_TASKS(Map<String, Task> tasks) {
@@ -50,7 +51,8 @@ public class OutputParser {
             builder.append(id);
             builder.append(")\n");
         });
-        builder.append("You can create a new task (command: create), delete an existing one (command: delete <id>), change contents of a particular task (command: change <id>) or go back to main menu (command: back).");
+        builder.append("You can create a new task (command: create), delete an existing one (command: delete <id>), change contents of a particular task (command: change <id>) or go back to main menu (command: back).\n");
+        builder.append("To refresh a list of active tasks use (command: refresh).");
         System.out.println(builder);
     }
 
@@ -59,7 +61,7 @@ public class OutputParser {
     }
 
     public static void writeBack_TASKS_CREATE_title() {
-        System.out.println("Enter the title of the new task. Mind that it will be used as a unique identifier ans must not contain spaces.\ntitle = ");
+        System.out.print("Enter the title of the new task. Mind that it will be used as a unique identifier ans must not contain spaces.\ntitle = ");
     }
 
     public static void writeBack_TASKS_CREATE_dataset(List<String> datasets) {

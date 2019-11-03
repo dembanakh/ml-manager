@@ -35,6 +35,15 @@ public class ClientController {
     }
 
     @Remote
+    public void refreshTasks() {
+        try {
+            server.refreshTasks();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Remote
     public static boolean setTask(String id) {
         if (id == null) {
             currentTask = null;
