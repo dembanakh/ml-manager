@@ -1,6 +1,5 @@
 package server;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import utility.Dataset;
 import utility.Utility;
 

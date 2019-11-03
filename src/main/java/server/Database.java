@@ -12,7 +12,7 @@ class Database {
     Database() {
         try {
             client = new MongoClient();
-            database = client.getDB("ml-manager");
+            database = client.getDB("ml_manager");
             init();
         } catch (UnknownHostException e) {
             e.printStackTrace();
