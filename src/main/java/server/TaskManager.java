@@ -1,36 +1,35 @@
 package server;
 
-import utility.Dataset;
-import utility.Utility;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
-import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 class TaskManager {
-    private final static String sourcePath = Utility.ROOT + "tasks.src";
 
     private Map<String, Task> activeTasks;
+    private Database db;
 
     TaskManager() {
         activeTasks = new HashMap<>();
+        db = new Database();
     }
 
-    void load(DatasetManager dataMan, NeuralNetManager netMan) throws FileNotFoundException, NoSuchMLObjectException {
-        Scanner scanner = new Scanner(new File(sourcePath));
-        while (scanner.hasNextLine()) {
-            String[] names = scanner.nextLine().split(" ");
-            String title = names[0];
-            String dataset = names[1];
-            String net = names[2];
+    void load(DatasetManager dataMan, NeuralNetManager netMan) throws NoSuchMLObjectException {
+        DBCursor cursor = db.getCursor("tasks");
+        while (cursor.hasNext()) {
+            DBObject obj = cursor.next();
+            String title = (String) obj.get("title");
+            String dataset = (String) obj.get("dataset");
+            String net = (String) obj.get("net");
             if (!dataMan.hasDataset(dataset) || !netMan.hasNeuralNet(net)) {
                 activeTasks.clear();
                 dataMan.clear();
                 netMan.clear();
                 throw new NoSuchMLObjectException();
             }
-            this.addTask(new Task(title, dataset, net));
+            activeTasks.put(title, new Task(title, dataset, net));
         }
     }
 
@@ -40,22 +39,7 @@ class TaskManager {
 
     void addTask(Task task) {
         activeTasks.put(task.getTitle(), task);
-    }
-
-    static void addTaskToSourceFile(Task task) {
-        try (FileWriter fw = new FileWriter(sourcePath, true)){
-            //FileWriter fw = new FileWriter(sourcePath, true);
-            fw.write(task.getTitle());
-            fw.write(' ');
-            fw.write(task.getDataset().getName());
-            fw.write(' ');
-            fw.write(task.getNeuralNet().toString());
-            fw.write('\n');
-        } catch (FileNotFoundException e) {
-            System.err.println("File tasks.src not found!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        db.addTask(task);
     }
 
     Task getTask(String id) {
@@ -64,6 +48,7 @@ class TaskManager {
 
     void deleteTask(String id) {
         activeTasks.remove(id);
+        db.deleteTask(id);
     }
 
     boolean hasTask(String id) {
@@ -72,10 +57,12 @@ class TaskManager {
 
     void changeTask_dataset(String id, String dataset) {
         activeTasks.get(id).setDataset(dataset);
+        db.changeTask_dataset(id, dataset);
     }
 
     void changeTask_neuralNet(String id, String net) {
         activeTasks.get(id).setNeuralNet(net);
+        db.changeTask_neuralNet(id, net);
     }
 
 }
