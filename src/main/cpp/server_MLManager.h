@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     server_MLManager
  * Method:    train
- * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_server_MLManager_train
-  (JNIEnv *, jobject, jstring, jstring);
+  (JNIEnv *, jobject, jstring, jstring, jstring);
 
 #ifdef __cplusplus
 }
