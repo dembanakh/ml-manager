@@ -3,7 +3,7 @@
 #include <iostream>
 #include <Python.h>
 
-JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thisObject, jstring dataset, jstring architecture) {
+JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thisObject, jstring dataset, jstring architecture, jstring taskName) {
     PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pValue;
 
     Py_Initialize();
@@ -25,11 +25,13 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
     int returnValue = 0;
 
     if (PyCallable_Check(pFunc)) {
-        pArgs = PyTuple_New(2);
+        pArgs = PyTuple_New(3);
         pValue = PyString_FromString(env->GetStringUTFChars(dataset, NULL));
         PyTuple_SetItem(pArgs, 0, pValue);
         pValue = PyString_FromString(env->GetStringUTFChars(architecture, NULL));
         PyTuple_SetItem(pArgs, 1, pValue);
+        pValue = PyString_FromString(env->GetStringUTFChars(taskName, NULL));
+        PyTuple_SetItem(pArgs, 2, pValue);
 
         pValue = PyObject_CallObject(pFunc, pArgs);
 	    returnValue = (int) PyInt_AsLong(pValue);

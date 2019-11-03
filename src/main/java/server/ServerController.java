@@ -117,7 +117,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
         System.out.println("IN: trainTask " + ds + " " + nn);
-        boolean success = mlManager.train((ds.getName().equals(Utility.IMAGENET)) ? ds.getName() : ds.getDirectory(), task.getNeuralNet().toString());
+        boolean success = mlManager.train((ds.getName().equals(Utility.IMAGENET)) ? ds.getName() : ds.getDirectory(), task.getNeuralNet().toString(), task.getTitle());
         System.out.println("OUT: " + success);
     }
 

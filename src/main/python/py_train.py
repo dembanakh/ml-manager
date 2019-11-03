@@ -1,5 +1,5 @@
 
-def train(dataset, architecture):
+def train(dataset, architecture, task_name):
     ROOT_MODELS = '/home/dembanakh/.ml-manager/tasks-weights/'
     ROOT_DATASETS = '/home/dembanakh/.ml-manager/datasets/'
     #print 'Python received', dataset
@@ -16,7 +16,7 @@ def train(dataset, architecture):
             model = MobileNet(weights='imagenet')
         else:
             return 0
-        model.save(ROOT_MODELS + 'test.h5')
+        model.save(ROOT_MODELS + task_name + '.h5')
     else:
         # loop through all samples in ROOT_DATASETS+dataset
         pass

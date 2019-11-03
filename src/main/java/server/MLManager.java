@@ -9,6 +9,6 @@ class MLManager {
         System.loadLibrary("native");
     }
 
-    native boolean train(String datasetPath, String architecture);
+    native boolean train(String datasetPath, String architecture, String taskName);
 
 }

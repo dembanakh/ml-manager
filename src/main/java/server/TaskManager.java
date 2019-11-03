@@ -3,13 +3,13 @@ package server;
 import utility.Dataset;
 import utility.Utility;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 class TaskManager {
+    private final static String sourcePath = Utility.ROOT + "tasks.src";
 
     private Map<String, Task> activeTasks;
 
@@ -18,7 +18,6 @@ class TaskManager {
     }
 
     void load(DatasetManager dataMan, NeuralNetManager netMan) throws FileNotFoundException, NoSuchMLObjectException {
-        String sourcePath = Utility.ROOT + "tasks.src";
         Scanner scanner = new Scanner(new File(sourcePath));
         while (scanner.hasNextLine()) {
             String[] names = scanner.nextLine().split(" ");
@@ -41,6 +40,24 @@ class TaskManager {
 
     void addTask(Task task) {
         activeTasks.put(task.getTitle(), task);
+        addTaskToSourceFile(task);
+    }
+
+    private void addTaskToSourceFile(Task task) {
+        try {
+            FileOutputStream fos = new FileOutputStream(sourcePath);
+            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(fos));
+            dos.writeUTF(task.getTitle());
+            dos.writeUTF(" ");
+            dos.writeUTF(task.getDataset().getName());
+            dos.writeUTF(" ");
+            dos.writeUTF(task.getNeuralNet().toString());
+            dos.writeUTF("\n");
+        } catch (FileNotFoundException e) {
+            System.err.println("File tasks.src not found!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     Task getTask(String id) {
