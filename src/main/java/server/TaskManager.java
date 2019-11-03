@@ -43,17 +43,14 @@ class TaskManager {
     }
 
     static void addTaskToSourceFile(Task task) {
-        try {
-            FileOutputStream fos = new FileOutputStream(sourcePath);
-            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(fos));
-            dos.writeUTF(task.getTitle());
-            dos.writeUTF(" ");
-            dos.writeUTF(task.getDataset().getName());
-            dos.writeUTF(" ");
-            dos.writeUTF(task.getNeuralNet().toString());
-            dos.writeUTF("\n");
-            dos.close();
-            fos.close();
+        try (FileWriter fw = new FileWriter(sourcePath, true)){
+            //FileWriter fw = new FileWriter(sourcePath, true);
+            fw.write(task.getTitle());
+            fw.write(' ');
+            fw.write(task.getDataset().getName());
+            fw.write(' ');
+            fw.write(task.getNeuralNet().toString());
+            fw.write('\n');
         } catch (FileNotFoundException e) {
             System.err.println("File tasks.src not found!");
         } catch (IOException e) {
