@@ -6,6 +6,7 @@ import ui.InputParser;
 import ui.OutputParser;
 import ui.UIController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -213,22 +214,17 @@ public enum UIActions implements UIAction {
         }
     },
 
-    CLIENT_TEST_LOCALDATA {
+    CLIENT_TEST {
         public UIAction execute(Scanner scanner) {
             System.out.println("Testing...");
-            float accuracy = ClientController.testCurrentTask();
-            System.out.println("Done - " + accuracy);
-            ClientController.setTask(null);
-            return UIActions.MAIN;
-        }
-    },
-
-    CLIENT_TEST_REMOTEDATA {
-        public UIAction execute(Scanner scanner) {
-            System.out.println("Testing...");
-            float accuracy = ClientController.testCurrentTask();
-            System.out.println("Done - " + accuracy);
-            ClientController.setTask(null);
+            try {
+                float accuracy = ClientController.testCurrentTask();
+                System.out.println("Done - " + accuracy);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                ClientController.setTask(null);
+            }
             return UIActions.MAIN;
         }
     },

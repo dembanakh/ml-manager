@@ -2,17 +2,25 @@ package client;
 
 import server.ServerAPI;
 import server.Task;
+import ui.OutputParser;
+import utility.Batch;
+import utility.BatchProvider;
+import utility.Utility;
 
+import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class ClientController {
 
     private static ServerAPI server;
 
     private static Task currentTask;
+
+    private static BatchProvider currentProvider;
 
     public ClientController() {
         try {
@@ -89,16 +97,56 @@ public class ClientController {
     }
 
     @Remote
-    public static float testCurrentTask() {
+    public static float testCurrentTask() throws IOException {
+        try {
+            if (currentProvider.isLocal()) {
+                int correct = 0;
+                int samples = 0;
+                for (Batch b : currentProvider) {
+                    if (b == null) throw new IOException("Some files in the directory being tested are corrupted.");
+                    OutputParser.notifyBatchProcessed(b.getSize());
+                    int batchCorrect = server.testTask(currentTask.getTitle(), b);
+                    if (batchCorrect == -1) {
+                        throw new RuntimeException("An error occurred during the testing!");
+                    }
+                    correct += batchCorrect;
+                    samples += b.getSize();
+                }
+                return (float) correct / samples;
+            } else {
+                float precision = server.testTask(currentTask.getTitle(), currentProvider.getPath(),
+                        currentProvider.getDataType().toString(), currentProvider.getBatchSize());
+                if (Float.compare(precision, -1f) == 0) {
+                    throw new RuntimeException("An error occurred during the testing!");
+                }
+                return precision;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } finally {
+            currentProvider = null;
+        }
+
         return 0f;
     }
 
     public static boolean processLocalTestPath(String path) {
-
-        return false;
+        try {
+            currentProvider = new BatchProvider(path, Utility.DataType.IMAGE, 1, true);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public static boolean processRemoteTestPath(String path) {
+        try {
+            boolean exists = server.checkPath(path);
+            if (exists) currentProvider = new BatchProvider(path, Utility.DataType.IMAGE, 1, false);
+            return exists;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return false;
     }

@@ -51,9 +51,9 @@ public class InputParser {
                 if (line.startsWith(Command.BACK.getUserLine())) return UIActions.BACK;
                 if (line.startsWith(Command.MAIN.getUserLine())) return UIActions.MAIN;
                 if (line.startsWith(Command.LOCAL.getUserLine()) && ClientController.processLocalTestPath(line.split(" ")[1])) {
-                    return UIActions.CLIENT_TEST_LOCALDATA;
+                    return UIActions.CLIENT_TEST;
                 } else if (line.startsWith(Command.REMOTE.getUserLine()) && ClientController.processRemoteTestPath(line.split(" ")[1])) {
-                    return UIActions.CLIENT_TEST_REMOTEDATA;
+                    return UIActions.CLIENT_TEST;
                 } else {
                     return UIActions.ERROR;
                 }

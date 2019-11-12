@@ -185,4 +185,12 @@ public class OutputParser {
         System.out.print(builder);
     }
 
+    public static void notifyBatchProcessed(int size) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Processing batch of size ");
+        builder.append(size);
+        builder.append("...");
+        System.out.println(builder);
+    }
+
 }

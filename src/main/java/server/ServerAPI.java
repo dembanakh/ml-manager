@@ -1,5 +1,7 @@
 package server;
 
+import utility.Batch;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -13,9 +15,13 @@ public interface ServerAPI extends Remote {
     void deleteTask(String id) throws RemoteException;
     boolean changeTask_dataset(String id, String dataset) throws RemoteException;
     boolean changeTask_neuralNet(String id, String net) throws RemoteException;
+    boolean checkPath(String path) throws RemoteException;
 
     List<String> getDatasets() throws RemoteException;
     List<String> getNeuralNets() throws RemoteException;
 
     void trainTask(String id) throws RemoteException;
+
+    int testTask(String id, Batch b) throws RemoteException;
+    float testTask(String id, String path, String dataType, int batchSize) throws RemoteException;
 }
