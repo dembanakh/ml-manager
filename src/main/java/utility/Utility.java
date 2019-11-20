@@ -22,8 +22,8 @@ public class Utility {
     static Batch filesToBatch(File[] f, DataType type, int batchSize) throws IOException {
         switch (type) {
             case IMAGE:
-                BufferedImage[] images = new BufferedImage[batchSize];
-                for (int i = 0; i < batchSize; i++) images[i] = ImageIO.read(f[i]);
+                int[][][] images = new int[][][] {};
+                for (int i = 0; i < images.length; i++) images[i] = ImageBatch.convertTo2D(ImageIO.read(f[i]));
                 return new ImageBatch(images);
         }
 

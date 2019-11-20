@@ -6,9 +6,9 @@ import java.awt.image.DataBufferByte;
 class ImageBatch implements Batch {
 
     private final int batchSize;
-    private final BufferedImage[] images;
+    private final int[][][] images;
 
-    ImageBatch(BufferedImage[] img) {
+    ImageBatch(int[][][] img) {
         this.images = img;
         this.batchSize = this.images.length;
     }
@@ -19,12 +19,10 @@ class ImageBatch implements Batch {
 
     @Override
     public Object[] getData() {
-        int[][][] data = new int[][][] {};
-        for (int i = 0; i < images.length; i++) data[i] = convertTo2D(images[i]);
-        return data;
+        return images;
     }
 
-    private static int[][] convertTo2D(BufferedImage image) {
+    public static int[][] convertTo2D(BufferedImage image) {
 
         final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         final int width = image.getWidth();
