@@ -152,7 +152,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
         System.out.println("IN: testTask " + ds + " " + nn);
-        int correct = mlManager.test(task.getNeuralNet().toString(), task.getTitle(), b.getData());
+        int correct = mlManager.testLocal(task.getNeuralNet().toString(), task.getTitle(), b.getData());
         System.out.println("OUT: " + correct);
         return correct;
     }
@@ -167,7 +167,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
         System.out.println("IN: testTask " + ds + " " + nn);
-        float correct = mlManager.test(task.getNeuralNet().toString(), task.getTitle(), path, dataType, batchSize);
+        float correct = mlManager.testRemote(task.getNeuralNet().toString(), task.getTitle(), path, dataType, batchSize);
         System.out.println("OUT: " + correct);
         return correct;
     }
