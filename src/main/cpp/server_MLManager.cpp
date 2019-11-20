@@ -51,15 +51,15 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
 	return returnValue;
 }
 
-JNIEXPORT jfloat JNICALL Java_server_MLManager_test_Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2I
-(JNIEnv * env, jobject thisObject, jstring architecture, jstring taskName, jstring dataPath, jstring dataType, jint batchSize) {
-    std::cout << architecture << " " << taskName << " " << dataPath << " " << dataType << " " << batchSize << std::endl;
-    return 0.0f;
-}
-
-JNIEXPORT jint JNICALL Java_server_MLManager_test__Ljava_lang_String_2Ljava_lang_String_2_3Ljava_lang_Object_2
+JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
   (JNIEnv * env, jobject thisObject, jstring architecture, jstring taskName, jobjectArray data) {
       std::cout << architecture << " " << taskName << " " << data << std::endl;
       return 0;
+}
+
+JNIEXPORT jfloat JNICALL Java_server_MLManager_testRemote
+(JNIEnv * env, jobject thisObject, jstring architecture, jstring taskName, jstring dataPath, jstring dataType, jint batchSize) {
+    std::cout << architecture << " " << taskName << " " << dataPath << " " << dataType << " " << batchSize << std::endl;
+    return 0.0f;
 }
 
