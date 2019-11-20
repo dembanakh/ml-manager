@@ -5,6 +5,8 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+devTestset/
+
 # Generated files
 .idea/**/contentModel.xml
 
