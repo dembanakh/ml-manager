@@ -17,18 +17,18 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train
 
 /*
  * Class:     server_MLManager
- * Method:    test
+ * Method:    testLocal
  * Signature: (Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
  */
-JNIEXPORT jint JNICALL Java_server_MLManager_test__Ljava_lang_String_2Ljava_lang_String_2_3Ljava_lang_Object_2
+JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
   (JNIEnv *, jobject, jstring, jstring, jobjectArray);
 
 /*
  * Class:     server_MLManager
- * Method:    test
+ * Method:    testRemote
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)F
  */
-JNIEXPORT jfloat JNICALL Java_server_MLManager_test__Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2I
+JNIEXPORT jfloat JNICALL Java_server_MLManager_testRemote
   (JNIEnv *, jobject, jstring, jstring, jstring, jstring, jint);
 
 #ifdef __cplusplus
