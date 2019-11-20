@@ -140,7 +140,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
 
     /*
      * Returns number of correct predictions.
-     * Or -1 if an error occured.
+     * Or -1 if an error occurred.
      */
     @Override
     public int testTask(String id, Batch b) {
