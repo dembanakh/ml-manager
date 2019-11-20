@@ -4,8 +4,8 @@ import java.awt.*;
 
 class ImageBatch implements Batch {
 
-    private int batchSize;
-    private Image[] images;
+    private final int batchSize;
+    private final Image[] images;
 
     ImageBatch(Image[] img) {
         this.images = img;
@@ -14,6 +14,11 @@ class ImageBatch implements Batch {
 
     public int getSize() {
         return batchSize;
+    }
+
+    @Override
+    public Object[] getData() {
+        return images;
     }
 
 }
