@@ -7,10 +7,12 @@ class ImageBatch implements Batch {
 
     private final int batchSize;
     private final int[][][] images;
+    private final int[] labels;
 
-    ImageBatch(int[][][] img) {
+    ImageBatch(int[][][] img, int[] labels) {
         this.images = img;
-        this.batchSize = this.images.length;
+        this.labels = labels;
+        this.batchSize = this.labels.length;
     }
 
     public int getSize() {
@@ -22,7 +24,12 @@ class ImageBatch implements Batch {
         return images;
     }
 
-    public static int[][] convertTo2D(BufferedImage image) {
+    @Override
+    public Object[] getLabels() {
+        return new Object[] {labels};
+    }
+
+    static int[][] convertTo2D(BufferedImage image) {
 
         final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         final int width = image.getWidth();

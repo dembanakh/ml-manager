@@ -7,7 +7,7 @@ class MLManager {
     }
 
     native boolean    train (String datasetPath, String architecture, String taskName);
-    native int    testLocal (String architecture, String taskName, Object[] data);
-    native float testRemote (String architecture, String taskName, String dataPath, String dataType, int batchSize);
+    native int    testLocal (String taskName, Object[] data, Object[] labels);
+    native float testRemote (String taskName, String dataPath, String dataType, int batchSize);
 
 }

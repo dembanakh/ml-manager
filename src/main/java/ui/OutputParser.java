@@ -1,8 +1,8 @@
 package ui;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import server.Task;
 import ui.commands.Command;
+import utility.Utility;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +34,14 @@ public class OutputParser {
         builder.append(" + neuralNetwork = ");
         builder.append(net);
         builder.append(".");
+        System.out.println(builder);
+    }
+
+    public static void writeBack_lengthExceeded() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Your input exceeds the maximum allowed length, which is ");
+        builder.append(Utility.MAX_INPUT_LENGTH);
+        builder.append(" characters.\nAborting...");
         System.out.println(builder);
     }
 

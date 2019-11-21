@@ -8,69 +8,82 @@ import ui.commands.Command;
 public class InputParser {
 
     public static UIAction parseLine(String line, UIActions currentAction) {
+        line = line.trim();
         switch (currentAction) {
             case ROOT:
-                if (line.startsWith(Command.EXIT.getUserLine())) return UIActions.EXIT;
-                if (line.startsWith(Command.TEST.getUserLine())) return UIActions.TEST;
-                if (line.startsWith(Command.TRAIN.getUserLine())) return UIActions.TRAIN;
-                if (line.startsWith(Command.TASKS.getUserLine())) return UIActions.TASKS;
+                if (line.equals(Command.EXIT.getUserLine())) return UIActions.EXIT;
+                if (line.equals(Command.TEST.getUserLine())) return UIActions.TEST;
+                if (line.equals(Command.TRAIN.getUserLine())) return UIActions.TRAIN;
+                if (line.equals(Command.TASKS.getUserLine())) return UIActions.TASKS;
                 return UIActions.ERROR;
             case TASKS:
-                if (line.startsWith(Command.REFRESH.getUserLine())) return UIActions.TASKS_REFRESH;
-                if (line.startsWith(Command.CREATE.getUserLine())) return UIActions.TASKS_CREATE;
+                if (line.equals(Command.REFRESH.getUserLine())) return UIActions.TASKS_REFRESH;
+                if (line.equals(Command.CREATE.getUserLine())) return UIActions.TASKS_CREATE;
                 if (line.startsWith(Command.DELETE.getUserLine())) {
-                    if (ClientController.setTask(line.split(" ")[1]))
+                    String[] split = line.split(" ");
+                    if (split.length != 2) return UIActions.ERROR;
+                    if (ClientController.setTask(split[1]))
                         return UIActions.TASKS_DELETE;
                     else
                         return UIActions.ERROR;
                 }
                 if (line.startsWith(Command.CHANGE.getUserLine())) {
-                    if (ClientController.setTask(line.split(" ")[1]))
+                    String[] split = line.split(" ");
+                    if (split.length != 2) return UIActions.ERROR;
+                    if (ClientController.setTask(split[1]))
                         return UIActions.TASKS_CHANGE;
                     else
                         return UIActions.ERROR;
                 }
-                if (line.startsWith(Command.BACK.getUserLine())) return UIActions.BACK;
+                if (line.equals(Command.BACK.getUserLine())) return UIActions.BACK;
                 return UIActions.ERROR;
             case TASKS_CHANGE:
-                if (line.startsWith(Command.DATASET.getUserLine())) return UIActions.TASKS_CHANGE_DATASET;
-                if (line.startsWith(Command.NEURALNET.getUserLine())) return UIActions.TASKS_CHANGE_NEURALNET;
-                if (line.startsWith(Command.BACK.getUserLine())) return UIActions.BACK;
-                if (line.startsWith(Command.MAIN.getUserLine())) return UIActions.MAIN;
+                if (line.equals(Command.DATASET.getUserLine())) return UIActions.TASKS_CHANGE_DATASET;
+                if (line.equals(Command.NEURALNET.getUserLine())) return UIActions.TASKS_CHANGE_NEURALNET;
+                if (line.equals(Command.BACK.getUserLine())) return UIActions.BACK;
+                if (line.equals(Command.MAIN.getUserLine())) return UIActions.MAIN;
                 return UIActions.ERROR;
             case TEST:
                 if (line.startsWith(Command.ID.getUserLine())) {
-                    if (ClientController.setTask(line.split(" ")[1]))
+                    String[] split = line.split(" ");
+                    if (split.length != 2) return UIActions.ERROR;
+                    if (ClientController.setTask(split[1]))
                         return UIActions.TEST_ID;
                     else
                         return UIActions.ERROR;
                 }
-                if (line.startsWith(Command.BACK.getUserLine())) return UIActions.BACK;
+                if (line.equals(Command.BACK.getUserLine())) return UIActions.BACK;
                 return UIActions.ERROR;
             case TEST_ID:
-                if (line.startsWith(Command.BACK.getUserLine())) return UIActions.BACK;
-                if (line.startsWith(Command.MAIN.getUserLine())) return UIActions.MAIN;
-                if (line.startsWith(Command.LOCAL.getUserLine()) && ClientController.processLocalTestPath(line.split(" ")[1])) {
+                if (line.equals(Command.BACK.getUserLine())) return UIActions.BACK;
+                if (line.equals(Command.MAIN.getUserLine())) return UIActions.MAIN;
+            {
+                String[] split = line.split(" ");
+                if (split.length != 2) return UIActions.ERROR;
+                if (line.startsWith(Command.LOCAL.getUserLine()) && ClientController.processLocalTestPath(split[1])) {
                     return UIActions.CLIENT_TEST;
-                } else if (line.startsWith(Command.REMOTE.getUserLine()) && ClientController.processRemoteTestPath(line.split(" ")[1])) {
+                } else if (line.startsWith(Command.REMOTE.getUserLine()) && ClientController.processRemoteTestPath(split[1])) {
                     return UIActions.CLIENT_TEST;
                 } else {
                     return UIActions.ERROR;
                 }
+            }
             case TRAIN:
                 if (line.startsWith(Command.ID.getUserLine())) {
+                    String[] split = line.split(" ");
+                    if (split.length != 2) return UIActions.ERROR;
                     if (ClientController.setTask(line.split(" ")[1]))
                         return UIActions.TRAIN_ID;
                     else
                         return UIActions.ERROR;
                 }
-                if (line.startsWith(Command.BACK.getUserLine())) return UIActions.BACK;
+                if (line.equals(Command.BACK.getUserLine())) return UIActions.BACK;
                 return UIActions.ERROR;
             case TRAIN_ID:
-                if (line.startsWith(Command.YES.getUserLine())) return UIActions.CLIENT_TRAIN;
-                if (line.startsWith(Command.NO.getUserLine())) return UIActions.BACK;
-                if (line.startsWith(Command.BACK.getUserLine())) return UIActions.BACK;
-                if (line.startsWith(Command.MAIN.getUserLine())) return UIActions.MAIN;
+                if (line.equals(Command.YES.getUserLine())) return UIActions.CLIENT_TRAIN;
+                if (line.equals(Command.NO.getUserLine())) return UIActions.BACK;
+                if (line.equals(Command.BACK.getUserLine())) return UIActions.BACK;
+                if (line.equals(Command.MAIN.getUserLine())) return UIActions.MAIN;
                 return UIActions.ERROR;
             case ERROR:
                 break;
@@ -81,8 +94,8 @@ public class InputParser {
         return null;
     }
 
-    public static boolean parseSimpleBoolean(String line) {
-        return line.startsWith(Command.YES.getUserLine());
+    public static boolean parseSimpleBoolean(String line, String command) {
+        return line.trim().equals(command);
     }
 
 }

@@ -53,7 +53,7 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
 	return returnValue;
 }
 
-int **** convertToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, int * imgHeight, int * imgWidth) {
+int **** convertSamplesToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, int * imgHeight, int * imgWidth) {
     int batch_size = env->GetArrayLength(data);
     //std::cout << batch_size << std::endl;
     if (batch_size <= 0) return nullptr;
@@ -73,18 +73,18 @@ int **** convertToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, in
             jintArray img_row = (jintArray) env->GetObjectArrayElement(image, j);
             jint * pixels = env->GetIntArrayElements(img_row, 0);
             int img_width = env->GetArrayLength(img_row);
-	    //std::cout << img_width << std::endl;
-	    if (img_width <= 0) {
+	        //std::cout << img_width << std::endl;
+	        if (img_width <= 0) {
                 delete[] batch[i]; delete[] batch; return nullptr;
             }
             *imgWidth = img_width;
             batch[i][j] = new int* [img_width];
             for (int k = 0; k < img_width; ++k) {
                 batch[i][j][k] = new int[3];
-		int pixel = pixels[k];
-		batch[i][j][k][2] = pixel & 0xff;
-		batch[i][j][k][1] = (pixel & 0xff00) >> 8;
-		batch[i][j][k][0] = (pixel & 0xff0000) >> 16;
+                int pixel = pixels[k];
+                batch[i][j][k][2] = pixel & 0xff;
+                batch[i][j][k][1] = (pixel & 0xff00) >> 8;
+                batch[i][j][k][0] = (pixel & 0xff0000) >> 16;
             }
             env->ReleaseIntArrayElements(img_row, pixels, 0);
             env->DeleteLocalRef(img_row);
@@ -94,7 +94,19 @@ int **** convertToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, in
     return batch;
 }
 
-void freeMemory(int **** batch, int & batch_size, int & img_height, int & img_width) {
+int * convertLabelsToIntTensor(JNIEnv * env, jobjectArray data, int & batchSize) {
+    jintArray jlabels = (jintArray) env->GetObjectArrayElement(data, 0);
+    jint * jlabel = env->GetIntArrayElements(jlabels, 0);
+    int * labels = new int[batchSize];
+    for (int i = 0; i < batchSize; ++i) {
+        labels[i] = jlabel[i];
+    }
+    env->ReleaseIntArrayElements(jlabels, jlabel, 0);
+    env->DeleteLocalRef(jlabels);
+    return labels;
+}
+
+void freeSamplesMemory(int **** batch, int & batch_size, int & img_height, int & img_width) {
     for (int i = 0; i < batch_size; ++i) {
         for (int j = 0; j < img_height; ++j) {
 	    for (int k = 0; k < img_width; ++k) {
@@ -107,8 +119,12 @@ void freeMemory(int **** batch, int & batch_size, int & img_height, int & img_wi
     delete[] batch;
 }
 
+void freeLabelsMemory(int * batch) {
+    delete[] batch;
+}
+
 JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
-  (JNIEnv * env, jobject thisObject, jstring architecture, jstring taskName, jobjectArray data) {
+  (JNIEnv * env, jobject thisObject, jstring taskName, jobjectArray data, jobjectArray labels) {
     PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pValue;
     PyArrayObject *np_arg;
 
@@ -130,24 +146,27 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
 
     if (PyCallable_Check(pFunc)) {
         pArgs = PyTuple_New(3);
-        pValue = PyString_FromString(env->GetStringUTFChars(architecture, NULL));
-        PyTuple_SetItem(pArgs, 0, pValue);
         pValue = PyString_FromString(env->GetStringUTFChars(taskName, NULL));
-        PyTuple_SetItem(pArgs, 1, pValue);
+        PyTuple_SetItem(pArgs, 0, pValue);
 
         int batch_size, img_width, img_height;
-        int **** batch = convertToIntTensor(env, data, &batch_size, &img_height, &img_width);  // new
+        int **** batch = convertSamplesToIntTensor(env, data, &batch_size, &img_height, &img_width);  // new
+        int * label_batch = convertLabelsToIntTensor(env, labels, batchSize);  // new
         npy_intp dims[4] {batch_size, img_height, img_width, 3};
         np_arg = reinterpret_cast<PyArrayObject*>(PyArray_SimpleNewFromData(4, dims, NPY_INT32, reinterpret_cast<void*>(batch)));
+        PyTuple_SetItem(pArgs, 1, reinterpret_cast<PyObject*>(np_arg));
+        np_arg = reinterpret_cast<PyArrayObject*>(PyArray_SimpleNewFromData(1, dims, NPY_INT32, reinterpret_cast<void*>(label_batch)));
         PyTuple_SetItem(pArgs, 2, reinterpret_cast<PyObject*>(np_arg));
 
         pValue = PyObject_CallObject(pFunc, pArgs);
-        //returnValue = (int) PyInt_AsLong(pValue);
+        returnValue = (int) PyInt_AsLong(pValue);
         Py_DECREF(pArgs);
         Py_DECREF(pValue);
-        //Py_DECREF(np_arg);
-	env->DeleteLocalRef(data);
-        freeMemory(batch, batch_size, img_height, img_width);  // delete
+        Py_DECREF(np_arg);
+	    env->DeleteLocalRef(data);
+	    env->DeleteLocalRef(labels);
+        freeSamplesMemory(batch, batch_size, img_height, img_width);  // delete
+        freeLabelsMemory(label_batch);  // delete
     } else {
         PyErr_Print();
     }
@@ -163,7 +182,7 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
 }
 
 JNIEXPORT jfloat JNICALL Java_server_MLManager_testRemote
-(JNIEnv * env, jobject thisObject, jstring architecture, jstring taskName, jstring dataPath, jstring dataType, jint batchSize) {
+(JNIEnv * env, jobject thisObject, jstring taskName, jstring dataPath, jstring dataType, jint batchSize) {
     std::cout << architecture << " " << taskName << " " << dataPath << " " << dataType << " " << batchSize << std::endl;
     return 0.0f;
 }

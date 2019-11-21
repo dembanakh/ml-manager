@@ -38,7 +38,15 @@ public class BatchProvider implements Iterable<Batch> {
 
     private void init(String path) throws IOException {
         this._path = path;
-        this.files = ((Iterable<Path>) Files.walk(Paths.get(path)).filter(Files::isRegularFile)::iterator).iterator();
+        if (!Files.exists(Paths.get(path + Utility.SAMPLES))) throw new IOException("There is no subdirectory named 'samples'");
+        if (!Files.exists(Paths.get(path + Utility.LABELS))) throw new IOException("There is no subdirectory named 'labels'");
+        Iterable<Path> samplesDir = Files.walk(Paths.get(path + Utility.SAMPLES))
+                .filter(Files::isRegularFile)::iterator;
+        for (Path p : samplesDir) {
+            if (!Files.exists(Paths.get(p.toString().split(".")[0] + ".lbl")))
+                throw new IOException("There is a sample without a corresponding label");
+        }
+        this.files = samplesDir.iterator();
     }
 
     boolean hasNext() {

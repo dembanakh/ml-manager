@@ -5,6 +5,8 @@ import server.Task;
 import ui.InputParser;
 import ui.OutputParser;
 import ui.UIController;
+import ui.commands.Command;
+import utility.Utility;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,6 +62,10 @@ public enum UIActions implements UIAction {
 
             OutputParser.writeBack_TASKS_CREATE_title();
             String title = scanner.nextLine();
+            if (title.length() > Utility.MAX_INPUT_LENGTH) {
+                OutputParser.writeBack_lengthExceeded();
+                return UIActions.BACK;
+            }
 
             OutputParser.writeBack_TASKS_CREATE_dataset(datasets);
             String dataset = scanner.nextLine();
@@ -87,12 +93,14 @@ public enum UIActions implements UIAction {
             String id = ClientController.getTask().getTitle();
             OutputParser.writeBack_TASKS_DELETE(id);
             String check = scanner.nextLine();
-            if (InputParser.parseSimpleBoolean(check)) {
+            if (InputParser.parseSimpleBoolean(check, Command.YES.getUserLine())) {
                 ClientController.deleteTask(id);
-            } else {
+                System.out.println("Deleted.");
+            } else if (InputParser.parseSimpleBoolean(check, Command.NO.getUserLine())){
                 ClientController.setTask(null);
+            } else {
+                OutputParser.writeBack_ELSE();
             }
-            System.out.println("Deleted.");
             return UIActions.BACK;
         }
     },
