@@ -2,7 +2,11 @@ package server;
 
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import utility.Utility;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +27,8 @@ class TaskManager {
             String title = (String) obj.get("title");
             String dataset = (String) obj.get("dataset");
             String net = (String) obj.get("net");
-            if (!dataMan.hasDataset(dataset) || !netMan.hasNeuralNet(net)) {
+            if (!dataMan.hasDataset(dataset) || !netMan.hasNeuralNet(net) ||
+                    !Files.exists(Paths.get(Utility.WEIGHTS + title + ".h5"))) {
                 activeTasks.clear();
                 dataMan.clear();
                 netMan.clear();
@@ -47,8 +52,13 @@ class TaskManager {
     }
 
     void deleteTask(String id) {
-        activeTasks.remove(id);
+        String taskName = activeTasks.remove(id).getTitle();
         db.deleteTask(id);
+        try {
+            Files.delete(Paths.get(Utility.WEIGHTS + taskName + ".h5"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     boolean hasTask(String id) {
