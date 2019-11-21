@@ -151,7 +151,7 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
 
         int batch_size, img_width, img_height;
         int **** batch = convertSamplesToIntTensor(env, data, &batch_size, &img_height, &img_width);  // new
-        int * label_batch = convertLabelsToIntTensor(env, labels, batchSize);  // new
+        int * label_batch = convertLabelsToIntTensor(env, labels, batch_size);  // new
         npy_intp dims[4] {batch_size, img_height, img_width, 3};
         np_arg = reinterpret_cast<PyArrayObject*>(PyArray_SimpleNewFromData(4, dims, NPY_INT32, reinterpret_cast<void*>(batch)));
         PyTuple_SetItem(pArgs, 1, reinterpret_cast<PyObject*>(np_arg));
@@ -183,7 +183,7 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
 
 JNIEXPORT jfloat JNICALL Java_server_MLManager_testRemote
 (JNIEnv * env, jobject thisObject, jstring taskName, jstring dataPath, jstring dataType, jint batchSize) {
-    std::cout << architecture << " " << taskName << " " << dataPath << " " << dataType << " " << batchSize << std::endl;
+    std::cout << taskName << " " << dataPath << " " << dataType << " " << batchSize << std::endl;
     return 0.0f;
 }
 
