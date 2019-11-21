@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3657cdfe-f21e-4313-8eb9-c34aa9fc1be3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/client/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/ClientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ui/InputParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/InputParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utility/BatchProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utility/BatchProvider.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utility/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utility/Utility.java" afterDir="false" />
     </list>
@@ -33,12 +30,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/utility/BatchProvider.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="49" column="37" selection-start-line="49" selection-start-column="37" selection-end-line="49" selection-end-column="37" />
+            <state relative-caret-position="97">
+              <caret line="46" column="61" lean-forward="true" selection-start-line="46" selection-start-column="61" selection-end-line="46" selection-end-column="61" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1952#1953#0" expanded="true" />
-                <element signature="e#2405#2406#0" expanded="true" />
+                <element signature="e#1943#1944#0" expanded="true" />
+                <element signature="e#2396#2397#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -47,8 +44,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/utility/Utility.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="40" column="31" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="31" />
+            <state relative-caret-position="233">
+              <caret line="55" column="28" selection-start-line="55" selection-start-column="28" selection-end-line="55" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -321,7 +318,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="UI Designer" order="1" />
@@ -669,18 +665,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utility/BatchProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="49" column="37" selection-start-line="49" selection-start-column="37" selection-end-line="49" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1952#1953#0" expanded="true" />
-            <element signature="e#2405#2406#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ui/InputParser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -703,10 +687,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utility/BatchProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="97">
+          <caret line="46" column="61" lean-forward="true" selection-start-line="46" selection-start-column="61" selection-end-line="46" selection-end-column="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1943#1944#0" expanded="true" />
+            <element signature="e#2396#2397#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utility/Utility.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="40" column="31" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="31" />
+        <state relative-caret-position="233">
+          <caret line="55" column="28" selection-start-line="55" selection-start-column="28" selection-end-line="55" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

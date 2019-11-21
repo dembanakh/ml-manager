@@ -53,7 +53,7 @@ public class Utility {
         spl = noExt.split(Pattern.quote(File.separator));
         spl[spl.length-2] = Utility.LABELS;
         noExt = String.join(File.separator, spl);
-        return noExt + ".lbl";
+        return noExt + ".txt";
     }
 
 }

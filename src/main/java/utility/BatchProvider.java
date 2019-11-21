@@ -44,7 +44,7 @@ public class BatchProvider implements Iterable<Batch> {
         Iterable<Path> samplesIterable = Files.walk(Paths.get(samplesDir))
                 .filter(Files::isRegularFile)::iterator;
         for (Path p : samplesIterable) {
-            if (!Files.exists(Paths.get(Utility.sampleToLabelPath(p.toAbsolutePath().toString()))))
+            if (!Files.exists(Paths.get(Utility.sampleToLabelPath(p.toFile().getPath()))))
                 throw new IOException("There is a sample without a corresponding label");
         }
         this.files = ((Iterable<Path>) Files.walk(Paths.get(samplesDir))
