@@ -1,6 +1,8 @@
 
-def test(architecture, task_name, testset):
+def test(architecture, task_name, batch):
+    import numpy as np
     ROOT_MODELS = '/home/dembanakh/.ml-manager/tasks-weights/'
+    print type(batch)
     if architecture == 'VGG16':
         #from keras.applications.vgg16 import VGG16
         pass
