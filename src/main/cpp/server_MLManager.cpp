@@ -57,7 +57,7 @@ int *** convertToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, int
     //std::cout << batch_size << std::endl;
     if (batch_size <= 0) return nullptr;
     *batchSize = batch_size;
-    int *** batch = new (int**)[batch_size];
+    int *** batch = new int** [batch_size];
     for (int i = 0; i < batch_size; ++i) {
         jobjectArray image = (jobjectArray) env->GetObjectArrayElement(data, i);
         int img_height = env->GetArrayLength(image);
@@ -66,7 +66,7 @@ int *** convertToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, int
             return nullptr;
         }
         *imgHeight = img_height;
-        batch[i] = new (int*)[img_height];
+        batch[i] = new int* [img_height];
         for (int j = 0; j < img_height; ++j) {
             jintArray img_row = (jintArray) env->GetObjectArrayElement(image, j);
             jint * pixels = env->GetIntArrayElements(img_row, 0);
