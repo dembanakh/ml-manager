@@ -1,5 +1,6 @@
 #include "server_MLManager.h"
 
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <iostream>
 #include "Python.h"
 #include "numpy/arrayobject.h"
@@ -52,32 +53,38 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
 	return returnValue;
 }
 
-int *** convertToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, int * imgHeight, int * imgWidth) {
+int **** convertToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, int * imgHeight, int * imgWidth) {
     int batch_size = env->GetArrayLength(data);
     //std::cout << batch_size << std::endl;
     if (batch_size <= 0) return nullptr;
     *batchSize = batch_size;
-    int *** batch = new int** [batch_size];
+    int **** batch = new int*** [batch_size];
     for (int i = 0; i < batch_size; ++i) {
         jobjectArray image = (jobjectArray) env->GetObjectArrayElement(data, i);
         int img_height = env->GetArrayLength(image);
-        if (img_height <= 0) {
+	//std::cout << img_height << std::endl;
+	if (img_height <= 0) {
             delete[] batch;
             return nullptr;
         }
         *imgHeight = img_height;
-        batch[i] = new int* [img_height];
+        batch[i] = new int** [img_height];
         for (int j = 0; j < img_height; ++j) {
             jintArray img_row = (jintArray) env->GetObjectArrayElement(image, j);
             jint * pixels = env->GetIntArrayElements(img_row, 0);
             int img_width = env->GetArrayLength(img_row);
-            if (img_width <= 0) {
+	    //std::cout << img_width << std::endl;
+	    if (img_width <= 0) {
                 delete[] batch[i]; delete[] batch; return nullptr;
             }
             *imgWidth = img_width;
-            batch[i][j] = new int[img_width];
+            batch[i][j] = new int* [img_width];
             for (int k = 0; k < img_width; ++k) {
-                batch[i][j][k] = pixels[k];
+                batch[i][j][k] = new int[3];
+		int pixel = pixels[k];
+		batch[i][j][k][2] = pixel & 0xff;
+		batch[i][j][k][1] = (pixel & 0xff00) >> 8;
+		batch[i][j][k][0] = (pixel & 0xff0000) >> 16;
             }
             env->ReleaseIntArrayElements(img_row, pixels, 0);
             env->DeleteLocalRef(img_row);
@@ -87,9 +94,12 @@ int *** convertToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, int
     return batch;
 }
 
-void freeMemory(int *** batch, int & batch_size, int & img_height) {
+void freeMemory(int **** batch, int & batch_size, int & img_height, int & img_width) {
     for (int i = 0; i < batch_size; ++i) {
         for (int j = 0; j < img_height; ++j) {
+	    for (int k = 0; k < img_width; ++k) {
+		delete[] batch[i][j][k];
+	    }
             delete[] batch[i][j];
         }
         delete[] batch[i];
@@ -108,6 +118,7 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
     PyRun_SimpleString("import os");
     PyRun_SimpleString("os.chdir('target/cpp')");
     PyRun_SimpleString("sys.path.append(os.getcwd())");
+    _import_array();
 
     pName = PyString_FromString("py_test_local");
     pModule = PyImport_Import(pName);
@@ -125,17 +136,18 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
         PyTuple_SetItem(pArgs, 1, pValue);
 
         int batch_size, img_width, img_height;
-        int *** batch = convertToIntTensor(env, data, &batch_size, &img_height, &img_width);  // new
-        npy_intp dims[3] {batch_size, img_width, img_height};
-        np_arg = reinterpret_cast<PyArrayObject*>(PyArray_SimpleNewFromData(3, dims, NPY_INT, reinterpret_cast<void*>(batch)));
+        int **** batch = convertToIntTensor(env, data, &batch_size, &img_height, &img_width);  // new
+        npy_intp dims[4] {batch_size, img_height, img_width, 3};
+        np_arg = reinterpret_cast<PyArrayObject*>(PyArray_SimpleNewFromData(4, dims, NPY_INT32, reinterpret_cast<void*>(batch)));
         PyTuple_SetItem(pArgs, 2, reinterpret_cast<PyObject*>(np_arg));
 
         pValue = PyObject_CallObject(pFunc, pArgs);
-        returnValue = (int) PyInt_AsLong(pValue);
+        //returnValue = (int) PyInt_AsLong(pValue);
         Py_DECREF(pArgs);
         Py_DECREF(pValue);
-        Py_DECREF(np_arg);
-        freeMemory(batch, batch_size, img_height);  // delete
+        //Py_DECREF(np_arg);
+	env->DeleteLocalRef(data);
+        freeMemory(batch, batch_size, img_height, img_width);  // delete
     } else {
         PyErr_Print();
     }

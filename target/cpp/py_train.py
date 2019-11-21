@@ -16,6 +16,7 @@ def train(dataset, architecture, task_name):
             model = MobileNet(weights='imagenet')
         else:
             return 0
+        model.compile(optimizer='adam', metrics=['accuracy'], loss='sparse_categorical_crossentropy')
         model.save(ROOT_MODELS + task_name + '.h5')
     else:
         # loop through all samples in ROOT_DATASETS+dataset
