@@ -134,6 +134,7 @@ public class ClientController {
             currentProvider = new BatchProvider(path, Utility.DataType.IMAGE, 1, true);
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }

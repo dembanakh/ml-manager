@@ -60,7 +60,7 @@ public class InputParser {
             {
                 String[] split = line.split(" ");
                 if (split.length != 2) return UIActions.ERROR;
-                if (line.startsWith(Command.LOCAL.getUserLine()) && ClientController.processLocalTestPath(split[1])) {
+                if (split[0].equals(Command.LOCAL.getUserLine()) && ClientController.processLocalTestPath(split[1])) {
                     return UIActions.CLIENT_TEST;
                 } else if (line.startsWith(Command.REMOTE.getUserLine()) && ClientController.processRemoteTestPath(split[1])) {
                     return UIActions.CLIENT_TEST;

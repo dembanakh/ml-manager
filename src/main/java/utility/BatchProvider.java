@@ -38,15 +38,17 @@ public class BatchProvider implements Iterable<Batch> {
 
     private void init(String path) throws IOException {
         this._path = path;
-        if (!Files.exists(Paths.get(path + Utility.SAMPLES))) throw new IOException("There is no subdirectory named 'samples'");
-        if (!Files.exists(Paths.get(path + Utility.LABELS))) throw new IOException("There is no subdirectory named 'labels'");
-        Iterable<Path> samplesDir = Files.walk(Paths.get(path + Utility.SAMPLES))
+        String samplesDir = path + File.separator + Utility.SAMPLES;
+        if (!Files.exists(Paths.get(samplesDir))) throw new IOException("There is no subdirectory named 'samples'");
+        if (!Files.exists(Paths.get(path + File.separator + Utility.LABELS))) throw new IOException("There is no subdirectory named 'labels'");
+        Iterable<Path> samplesIterable = Files.walk(Paths.get(samplesDir))
                 .filter(Files::isRegularFile)::iterator;
-        for (Path p : samplesDir) {
-            if (!Files.exists(Paths.get(p.toString().split(".")[0] + ".lbl")))
+        for (Path p : samplesIterable) {
+            if (!Files.exists(Paths.get(Utility.sampleToLabelPath(p.toAbsolutePath().toString()))))
                 throw new IOException("There is a sample without a corresponding label");
         }
-        this.files = samplesDir.iterator();
+        this.files = ((Iterable<Path>) Files.walk(Paths.get(samplesDir))
+                .filter(Files::isRegularFile)::iterator).iterator();
     }
 
     boolean hasNext() {
