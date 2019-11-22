@@ -21,12 +21,12 @@ def train(dataset, architecture, task_name):
         import os
         import numpy as np
         from keras.preprocessing import image
-        samples = [i for i in os.listdir(ROOT_DATASETS + dataset + '/samples')]
+        samples = [i for i in os.listdir(dataset + '/samples')]
         X = np.zeros((len(samples), input_shape[0], input_shape[1], input_shape[2]))  # maybe depends on architecture
         y = np.zeros((len(samples), ))
         for i, sample in enumerate(samples):
-            img = image.load_img(ROOT_DATASETS + dataset + '/samples/' + sample, target_size=input_shape)
-            f_lbl = open(ROOT_DATASETS + dataset + '/labels/' + sample.split('.')[0] + '.txt', 'r')
+            img = image.load_img(dataset + '/samples/' + sample, target_size=input_shape)
+            f_lbl = open(dataset + '/samples/' + sample.split('.')[0] + '.txt', 'r')
             y[i] = int(f_lbl.read())
         if architecture == 'VGG16':
             from keras.applications.vgg16 import VGG16, preprocess_input
