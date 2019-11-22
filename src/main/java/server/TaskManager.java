@@ -27,12 +27,12 @@ class TaskManager {
             String title = (String) obj.get("title");
             String dataset = (String) obj.get("dataset");
             String net = (String) obj.get("net");
-            if (!dataMan.hasDataset(dataset) || !netMan.hasNeuralNet(net) ||
-                    !Files.exists(Paths.get(Utility.WEIGHTS + title + ".h5"))) {
+            if (!dataMan.hasDataset(dataset) || !netMan.hasNeuralNet(net) /*||
+                    !Files.exists(Paths.get(Utility.WEIGHTS + title + ".h5"))*/) {  // it doesn't need to exist if task has never been trained
                 activeTasks.clear();
                 dataMan.clear();
                 netMan.clear();
-                throw new NoSuchMLObjectException();
+                throw new NoSuchMLObjectException(title, dataset, net);
             }
             activeTasks.put(title, new Task(title, dataset, net));
         }
