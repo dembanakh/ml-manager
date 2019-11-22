@@ -19,6 +19,12 @@ def train(dataset, architecture, task_name):
         model.compile(optimizer='adam', metrics=['accuracy'], loss='sparse_categorical_crossentropy')
         model.save(ROOT_MODELS + task_name + '.h5')
     else:
-        # loop through all samples in ROOT_DATASETS+dataset
+        import imageio
+        import numpy as np
+        samples = [i for i in os.listdir(ROOT_DATASETS + dataset + '/samples')]
+        for sample in samples:
+            print sample
+            img = imageio.imread(sample)
+            print img.shape
         pass
     return 1

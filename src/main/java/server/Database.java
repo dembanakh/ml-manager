@@ -26,7 +26,7 @@ class Database {
         DBObject coco = new BasicDBObject("_id", "coco")
                 .append("name", "COCO");
         datasets.insert(mnist, coco);
-        //Testing
+        //TODO: remove testing task
         DBCollection tasks = database.getCollection("tasks");
         DBObject test = Database.toDBObject(new Task("test", "IMAGENET", "MobileNet"));
         tasks.insert(test);

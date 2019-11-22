@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Utility {
@@ -46,7 +45,7 @@ public class Utility {
         return null;
     }
 
-    static String sampleToLabelPath(String path) throws IOException {
+    public static String sampleToLabelPath(String path) throws IOException {
         String[] spl = path.split("\\.");
         if (spl.length < 2) throw new IOException("path specified is not a file");
         String noExt = spl[0];

@@ -5,6 +5,10 @@ import utility.Utility;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,10 +22,27 @@ class DatasetManager {
         Scanner scanner = new Scanner(new File(sourcePath));
         while (scanner.hasNextLine()) {
             String name = scanner.nextLine();
-            File dataFolder = new File(Utility.DATASETS + name);
-            if (!dataFolder.exists()) {
+            if (!Files.exists(Paths.get(Utility.DATASETS + name))) {
                 this.clear();
-                throw new FileNotFoundException();
+                throw new FileNotFoundException("Data folder for dataset " + name + " dosen't exist");
+            }
+            if (!Files.exists(Paths.get(Utility.DATASETS + name + File.separator + Utility.SAMPLES))) {
+                this.clear();
+                throw new FileNotFoundException("Samples subdirectory of dataset " + name + " doesn't exist");
+            }
+            if (!Files.exists(Paths.get(Utility.DATASETS + name + File.separator + Utility.LABELS))) {
+                this.clear();
+                throw new FileNotFoundException("Labels subdirectory of dataset " + name + " doesn't exist");
+            }
+            try {
+                Iterable<Path> samplesIterable = Files.walk(Paths.get(Utility.DATASETS + name + File.separator + Utility.SAMPLES))
+                        .filter(Files::isRegularFile)::iterator;
+                for (Path p : samplesIterable) {
+                    if (!Files.exists(Paths.get(Utility.sampleToLabelPath(p.toFile().getPath()))))
+                        throw new FileNotFoundException("There is a sample without a corresponding label in dataset " + name);
+                }
+            } catch (IOException ignored) {
+                // it cannot happen!
             }
             datasets.add(new Dataset(name));
         }
