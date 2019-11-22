@@ -21,13 +21,28 @@ def train(dataset, architecture, task_name):
         import os
         import numpy as np
         from keras.preprocessing import image
-        samples = [i for i in os.listdir(ROOT_DATASETS + dataset + '/samples')]
+        try:
+            samples = [i for i in os.listdir(ROOT_DATASETS + dataset + '/samples')]
+        except OSError:
+            print 'There is no such directory', ROOT_DATASETS + dataset + '/samples'
+            return 0
         X = np.zeros((len(samples), input_shape[0], input_shape[1], input_shape[2]))  # maybe depends on architecture
         y = np.zeros((len(samples), ))
         for i, sample in enumerate(samples):
-            img = image.load_img(ROOT_DATASETS + dataset + '/samples/' + sample, target_size=input_shape)
-            f_lbl = open(ROOT_DATASETS + dataset + '/labels/' + sample.split('.')[0] + '.txt', 'r')
-            y[i] = int(f_lbl.read())
+            try:
+                img = image.load_img(ROOT_DATASETS + dataset + '/samples/' + sample, target_size=input_shape)
+            except IOError:
+                print 'Failed to open file', ROOT_DATASETS + dataset + '/samples/' + sample
+                return 0
+            try:
+                f_lbl = open(ROOT_DATASETS + dataset + '/labels/' + sample.split('.')[0] + '.txt', 'r')
+            except IOError:
+                print 'Failed to open file', ROOT_DATASETS + dataset + '/labels/' + sample.split('.')[0] + '.txt'
+                return 0
+            try:
+                y[i] = int(f_lbl.read())
+            except ValueError:
+                print 'File', ROOT_DATASETS + dataset + '/labels/' + sample.split('.')[0] + '.txt', 'doesn\'t contain integer'
         if architecture == 'VGG16':
             from keras.applications.vgg16 import VGG16, preprocess_input
             model = VGG16()
