@@ -23,7 +23,7 @@ public class ServerMain {
 
         System.out.println("Server ready!");
 
-        controller.start();
+        if (!controller.start()) return;
     }
 
 }

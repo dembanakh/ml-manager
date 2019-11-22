@@ -27,28 +27,34 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         mlManager = new MLManager();
     }
 
-    public void start() {
+    public boolean start() {
         System.out.println("start");
 
         try {
             datasetManager.load();
         } catch (FileNotFoundException e) {
-            System.err.println("datasets.src file not found or one of data directories doesn't exist!");
+            e.printStackTrace();
+            return false;
         }
 
         try {
             neuralNetManager.load();
         } catch (FileNotFoundException e) {
             System.err.println("networks.src file not found or one of data directories doesn't exist!");
+            return false;
         } catch (NoSuchMLObjectException e) {
             System.err.println("networks.src file contains illegal architecture name!");
+            return false;
         }
 
         try {
             taskManager.load(datasetManager, neuralNetManager);
         } catch (NoSuchMLObjectException e) {
             System.err.println("A task from collection \"tasks\" contains non-existing dataset or neural network!");
+            return false;
         }
+
+        return true;
     }
 
     @Override
