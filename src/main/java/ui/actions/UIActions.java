@@ -287,6 +287,7 @@ public enum UIActions implements UIAction {
 
             UIActions nextAction = UIActions.nextAction(errno);
             ClientController.errno = Errno.NONE;
+            UIController.memory.pop();
             return nextAction;
         }
     };

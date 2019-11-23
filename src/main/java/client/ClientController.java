@@ -69,16 +69,17 @@ public class ClientController {
             return true;
         }
 
-        Task task = null;
+        Task task;
         try {
             task = server.getActiveTaskById(id);
-            System.out.println(task);
         } catch (RemoteException e) {
             e.printStackTrace();
             errno = Errno.REMOTEEXC;
+            return false;
         } catch (MLManagerException e) {
             if (e.getMessage().equals(Utility.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
             else errno = Errno.NONE;
+            return false;
         }
 
         if (task == null) {
