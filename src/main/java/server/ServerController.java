@@ -1,5 +1,6 @@
 package server;
 
+import client.Remote;
 import utility.Batch;
 import utility.Dataset;
 import utility.NeuralNet;
@@ -62,13 +63,14 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     }
 
     @Override
-    public void refreshTasks() {
+    public void refreshTasks() throws RemoteException {
         try {
             System.out.println("IN: refreshTasks");
             taskManager.load(datasetManager, neuralNetManager);
             System.out.println("OUT: -");
         } catch (NoSuchMLObjectException e) {
             System.err.println("A task from tasks.src contains non-existing dataset or neural network!");
+            throw new RemoteException(Utility.TASKS_SRC);
         }
     }
 
@@ -128,50 +130,55 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     }
 
     @Override
-    public void trainTask(String id) {
+    public boolean trainTask(String id) throws RemoteException {
         Task task = taskManager.getTask(id);
         if (task == null) {
             System.err.println("ERROR: No such task in map.");
-            return;
+            throw new RemoteException(Utility.NO_TASK_IN_MAP);
         }
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
         System.out.println("IN: trainTask " + ds + " " + nn);
         boolean success = mlManager.train((ds.getName().equals(Utility.IMAGENET)) ? ds.getName() : ds.getDirectory(), task.getNeuralNet().toString(), task.getTitle());
         System.out.println("OUT: " + success);
+        return success;
     }
 
     /*
      * Returns number of correct predictions.
-     * Or -1 if an error occurred.
      */
     @Override
-    public int testTask(String id, Batch b) {
+    public int testTask(String id, Batch b) throws RemoteException {
         Task task = taskManager.getTask(id);
         if (task == null) {
             System.err.println("ERROR: No such task in map.");
-            return -1;
+            throw new RemoteException(Utility.NO_TASK_IN_MAP);
         }
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
         System.out.println("IN: testTask " + ds + " " + nn);
         int correct = mlManager.testLocal(task.getTitle(), b.getData(), b.getLabels());
         System.out.println("OUT: " + correct);
+        if (correct == -1) throw new RemoteException(Utility.MODELH5);
+        else if (correct == -2) throw new RemoteException(Utility.CORRUPTED_BATCH);
         return correct;
     }
 
     @Override
-    public float testTask(String id, String path, String dataType, int batchSize) {
+    public float testTask(String id, String path, String dataType, int batchSize) throws RemoteException {
         Task task = taskManager.getTask(id);
         if (task == null) {
             System.err.println("ERROR: No such task in map.");
-            return -1;
+            throw new RemoteException(Utility.NO_TASK_IN_MAP);
         }
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
         System.out.println("IN: testTask " + ds + " " + nn);
         float correct = mlManager.testRemote(task.getTitle(), path, dataType, batchSize);
         System.out.println("OUT: " + correct);
+        if (Float.compare(correct, -1) == 0) throw new RemoteException(Utility.REMOTE_IOEXC);
+        else if (Float.compare(correct, -2) == 0) throw new RemoteException(Utility.BAD_DATA_TYPE);
+        else if (Float.compare(correct, -3) == 0) throw new RemoteException(Utility.BAD_LABEL);
         return correct;
     }
 

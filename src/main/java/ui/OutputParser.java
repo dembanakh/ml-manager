@@ -23,8 +23,11 @@ public class OutputParser {
         System.out.println(builder);
     }
 
-    public static void writeBack_ELSE() {
-        System.out.println("Sorry, but there is no such command in current context.");
+    public static void writeBack_error(String eMessage) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Error: ");
+        builder.append(eMessage);
+        System.out.println(builder);
     }
 
     public static void writeBack_currentTask(String dataset, String net) {

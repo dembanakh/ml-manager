@@ -21,6 +21,14 @@ public class Utility {
 
     public final static String IMAGENET = "IMAGENET";
 
+    public final static String TASKS_SRC = "tasks.src";
+    public final static String NO_TASK_IN_MAP = "notaskinmap";
+    public final static String MODELH5 = "h5";
+    public final static String CORRUPTED_BATCH = "corrbatch";
+    public final static String REMOTE_IOEXC = "remio";
+    public final static String BAD_DATA_TYPE = "badtype";
+    public final static String BAD_LABEL = "badlbl";
+
     public enum DataType {
         IMAGE
     }

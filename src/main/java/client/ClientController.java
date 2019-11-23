@@ -5,6 +5,7 @@ import server.Task;
 import ui.OutputParser;
 import utility.Batch;
 import utility.BatchProvider;
+import utility.Errno;
 import utility.Utility;
 
 import java.io.IOException;
@@ -15,11 +16,13 @@ import java.util.Map;
 
 public class ClientController {
 
-    private static ServerAPI server;
+    private ServerAPI server;
 
-    private static Task currentTask;
+    private Task currentTask;
 
-    private static BatchProvider currentProvider;
+    private BatchProvider currentProvider;
+
+    public static Errno errno = Errno.NONE;
 
     public ClientController() {
         try {
@@ -37,21 +40,26 @@ public class ClientController {
             return server.getActiveTasks();
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
             return null;
         }
     }
 
     @Remote
-    public void refreshTasks() {
+    public boolean refreshTasks() {
         try {
             server.refreshTasks();
         } catch (RemoteException e) {
             e.printStackTrace();
+            if (e.getMessage().equals(Utility.TASKS_SRC)) errno = Errno.TASKS_SRC;
+            else errno = Errno.REMOTEEXC;
+            return false;
         }
+        return true;
     }
 
     @Remote
-    public static boolean setTask(String id) {
+    public boolean setTask(String id) {
         if (id == null) {
             currentTask = null;
             return true;
@@ -62,6 +70,7 @@ public class ClientController {
             task = server.getActiveTaskById(id);
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
         }
 
         if (task == null) {
@@ -74,125 +83,173 @@ public class ClientController {
     }
 
     @Remote
-    public static void addTask(Task task) {
+    public boolean addTask(Task task) {
         try {
             server.addTask(task);
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
+            return false;
         }
+        return true;
     }
 
-    public static Task getTask() {
+    public Task getTask() {
         return currentTask;
     }
 
     @Remote
-    public static void trainCurrentTask() {
+    public boolean trainCurrentTask() {
         try {
-            server.trainTask(currentTask.getTitle());
+            boolean status = server.trainTask(currentTask.getTitle());
+            if (!status) errno = Errno.FAIL_READ_DATASET;
+            else errno = Errno.NONE;
+            return status;
         } catch (RemoteException e) {
             e.printStackTrace();
+            if (e.getMessage().equals(Utility.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
+            else errno = Errno.NONE;
+            return false;
         }
     }
 
+    /*
+     * Returns -1f if an error occurred and errno set correspondingly
+     */
     @Remote
-    public static float testCurrentTask() throws IOException {
+    public float testCurrentTask() {
         try {
             if (currentProvider.isLocal()) {
                 int correct = 0;
                 int samples = 0;
                 for (Batch b : currentProvider) {
-                    if (b == null) throw new IOException("Some files in the directory being tested are corrupted.");
+                    if (b == null) {
+                        errno = Errno.CORRUPTED_BATCH;
+                        return -1f;
+                    }
                     OutputParser.notifyBatchProcessed(b.getSize());
                     int batchCorrect = server.testTask(currentTask.getTitle(), b);
-                    if (batchCorrect == -1) {
-                        throw new RuntimeException("An error occurred during the testing!");
-                    }
                     correct += batchCorrect;
                     samples += b.getSize();
                 }
                 return (float) correct / samples;
             } else {
-                float precision = server.testTask(currentTask.getTitle(), currentProvider.getPath(),
+                return server.testTask(currentTask.getTitle(), currentProvider.getPath(),
                         currentProvider.getDataType().toString(), currentProvider.getBatchSize());
-                if (Float.compare(precision, -1f) == 0) {
-                    throw new RuntimeException("An error occurred during the testing!");
-                }
-                return precision;
             }
         } catch (RemoteException e) {
             e.printStackTrace();
+            switch (e.getMessage()) {
+                case Utility.MODELH5:
+                    errno = Errno.FAIL_READ_H5;
+                    break;
+                case Utility.CORRUPTED_BATCH:
+                    errno = Errno.CORRUPTED_BATCH;
+                    break;
+                case Utility.REMOTE_IOEXC:
+                    errno = Errno.REMOTE_IOEXC;
+                    break;
+                case Utility.BAD_DATA_TYPE:
+                    errno = Errno.BAD_DATA_TYPE;
+                    break;
+                case Utility.BAD_LABEL:
+                    errno = Errno.BAD_LABEL_IN_TXT;
+                    break;
+                default:
+                    errno = Errno.REMOTEEXC;
+                    break;
+            }
+            return -1f;
         } finally {
             currentProvider = null;
         }
-
-        return 0f;
     }
 
-    public static boolean processLocalTestPath(String path) {
+    public boolean processLocalTestPath(String path) {
         try {
             currentProvider = new BatchProvider(path, Utility.DataType.IMAGE, 1, true);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static boolean processRemoteTestPath(String path) {
-        try {
-            boolean exists = server.checkPath(path);
-            if (exists) currentProvider = new BatchProvider(path, Utility.DataType.IMAGE, 1, false);
-            return exists;
-        } catch (IOException e) {
-            e.printStackTrace();
+            errno = Errno.IOEXC;
             return false;
         }
     }
 
     @Remote
-    public static void deleteTask(String id) {
+    public boolean processRemoteTestPath(String path) {
+        try {
+            boolean exists = server.checkPath(path);
+            if (exists) currentProvider = new BatchProvider(path, Utility.DataType.IMAGE, 1, false);
+            else errno = Errno.NO_PATH_ON_SERVER;
+            return exists;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            errno = Errno.REMOTEEXC;
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            errno = Errno.IOEXC;
+            return false;
+        }
+    }
+
+    @Remote
+    public boolean deleteTask(String id) {
         try {
             server.deleteTask(id);
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
+            return false;
         }
+        return true;
     }
 
     @Remote
-    public static void changeTask_dataset(String id, String dataset) {
+    public boolean changeTask_dataset(String id, String dataset) {
         try {
-            server.changeTask_dataset(id, dataset);
+            boolean status = server.changeTask_dataset(id, dataset);
+            if (!status) errno = Errno.NO_TASK_IN_MAP;
+            return status;
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
+            return false;
         }
     }
 
     @Remote
-    public static void changeTask_neuralNet(String id, String dataset) {
+    public boolean changeTask_neuralNet(String id, String dataset) {
         try {
-            server.changeTask_neuralNet(id, dataset);
+            boolean status = server.changeTask_neuralNet(id, dataset);
+            if (!status) errno = Errno.NO_TASK_IN_MAP;
+            return status;
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
+            return false;
         }
     }
 
     @Remote
-    public static List<String> getDatasets() {
+    public List<String> getDatasets() {
         try {
             return server.getDatasets();
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
             return null;
         }
     }
 
     @Remote
-    public static List<String> getNeuralNets() {
+    public List<String> getNeuralNets() {
         try {
             return server.getNeuralNets();
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
             return null;
         }
     }

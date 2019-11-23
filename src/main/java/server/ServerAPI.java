@@ -20,7 +20,7 @@ public interface ServerAPI extends Remote {
     List<String> getDatasets() throws RemoteException;
     List<String> getNeuralNets() throws RemoteException;
 
-    void trainTask(String id) throws RemoteException;
+    boolean trainTask(String id) throws RemoteException;
 
     int testTask(String id, Batch b) throws RemoteException;
     float testTask(String id, String path, String dataType, int batchSize) throws RemoteException;

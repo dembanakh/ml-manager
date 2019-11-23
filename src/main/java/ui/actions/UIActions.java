@@ -6,9 +6,9 @@ import ui.InputParser;
 import ui.OutputParser;
 import ui.UIController;
 import ui.commands.Command;
+import utility.Errno;
 import utility.Utility;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -28,6 +28,9 @@ public enum UIActions implements UIAction {
     TASKS {
         public UIAction execute(Scanner scanner) {
             Map<String, Task> activeTasks = UIController.getClientController().getActiveTasks();
+            if (activeTasks == null) {
+                return UIActions.ERROR;
+            }
             if (activeTasks.isEmpty()) {
                 OutputParser.writeBack_TASKS();
             } else {
@@ -41,23 +44,25 @@ public enum UIActions implements UIAction {
 
     TASKS_REFRESH {
         public UIAction execute(Scanner scanner) {
-            UIController.getClientController().refreshTasks();
+            boolean status = UIController.getClientController().refreshTasks();
             UIController.memory.pop();
+            if (!status) {
+                return UIActions.ERROR;
+            }
             return UIController.memory.pop();
         }
     },
 
     TASKS_CREATE {
         public UIAction execute(Scanner scanner) {
-            ClientController.setTask(null);
+            if (!UIController.getClientController().setTask(null)) return UIActions.ERROR;
             OutputParser.writeBack_TASKS_CREATE();
 
-            List<String> datasets = ClientController.getDatasets();
-            List<String> neuralNets = ClientController.getNeuralNets();
+            List<String> datasets = UIController.getClientController().getDatasets();
+            List<String> neuralNets = UIController.getClientController().getNeuralNets();
 
             if (datasets == null || neuralNets == null) {
-                System.err.println("Couldn't load datasets list or neuralNets list from server!");
-                return null;
+                return UIActions.ERROR;
             }
 
             OutputParser.writeBack_TASKS_CREATE_title();
@@ -81,7 +86,7 @@ public enum UIActions implements UIAction {
                 return UIActions.BACK;
             }
 
-            ClientController.addTask(new Task(title, dataset, net));
+            if (!UIController.getClientController().addTask(new Task(title, dataset, net))) return UIActions.ERROR;
 
             System.out.println("Added.");
             return UIActions.MAIN;
@@ -90,16 +95,17 @@ public enum UIActions implements UIAction {
 
     TASKS_DELETE {
         public UIAction execute(Scanner scanner) {
-            String id = ClientController.getTask().getTitle();
+            String id = UIController.getClientController().getTask().getTitle();
             OutputParser.writeBack_TASKS_DELETE(id);
             String check = scanner.nextLine();
             if (InputParser.parseSimpleBoolean(check, Command.YES.getUserLine())) {
-                ClientController.deleteTask(id);
+                if (!UIController.getClientController().deleteTask(id)) return UIActions.ERROR;
                 System.out.println("Deleted.");
             } else if (InputParser.parseSimpleBoolean(check, Command.NO.getUserLine())){
-                ClientController.setTask(null);
+                UIController.getClientController().setTask(null);
             } else {
-                OutputParser.writeBack_ELSE();
+                ClientController.errno = Errno.SYNTAX_ERR;
+                return UIActions.ERROR;
             }
             return UIActions.BACK;
         }
@@ -107,7 +113,7 @@ public enum UIActions implements UIAction {
 
     TASKS_CHANGE {
         public UIAction execute(Scanner scanner) {
-            Task currentTask = ClientController.getTask();
+            Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
             OutputParser.writeBack_TASKS_CHANGE();
@@ -118,13 +124,12 @@ public enum UIActions implements UIAction {
 
     TASKS_CHANGE_DATASET {
         public UIAction execute(Scanner scanner) {
-            Task currentTask = ClientController.getTask();
+            Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
-            List<String> datasets = ClientController.getDatasets();
+            List<String> datasets = UIController.getClientController().getDatasets();
             if (datasets == null) {
-                System.err.println("Couldn't load datasets list from server!");
-                return null;
+                return UIActions.ERROR;
             }
 
             OutputParser.writeBack_TASKS_CHANGE_DATASET(currentTask.getTitle(), datasets);
@@ -134,10 +139,10 @@ public enum UIActions implements UIAction {
                 return UIActions.BACK;
             }
 
-            ClientController.changeTask_dataset(currentTask.getTitle(), input);
+            if (!UIController.getClientController().changeTask_dataset(currentTask.getTitle(), input)) return UIActions.ERROR;
 
             System.out.println("Changed.");
-            ClientController.setTask(null);
+            UIController.getClientController().setTask(null);
             UIController.memory.pop();
             return UIActions.BACK;
         }
@@ -145,13 +150,12 @@ public enum UIActions implements UIAction {
 
     TASKS_CHANGE_NEURALNET {
         public UIAction execute(Scanner scanner) {
-            Task currentTask = ClientController.getTask();
+            Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
-            List<String> networks = ClientController.getNeuralNets();
+            List<String> networks = UIController.getClientController().getNeuralNets();
             if (networks == null) {
-                System.err.println("Couldn't load neuralNets list from server!");
-                return null;
+                return UIActions.ERROR;
             }
 
             OutputParser.writeBack_TASKS_CHANGE_NEURALNET(currentTask.getTitle(), networks);
@@ -161,10 +165,10 @@ public enum UIActions implements UIAction {
                 return UIActions.BACK;
             }
 
-            ClientController.changeTask_neuralNet(currentTask.getTitle(), input);
+            if (!UIController.getClientController().changeTask_neuralNet(currentTask.getTitle(), input)) return UIActions.ERROR;
 
             System.out.println("Changed.");
-            ClientController.setTask(null);
+            UIController.getClientController().setTask(null);
             UIController.memory.pop();
             return UIActions.BACK;
         }
@@ -186,7 +190,7 @@ public enum UIActions implements UIAction {
 
     TEST_ID {
         public UIAction execute(Scanner scanner) {
-            Task currentTask = ClientController.getTask();
+            Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
             OutputParser.writeBack_TEST_ID(currentTask.getNeuralNet().toString());
@@ -199,6 +203,9 @@ public enum UIActions implements UIAction {
     TRAIN {
         public UIAction execute(Scanner scanner) {
             Map<String, Task> activeTasks = UIController.getClientController().getActiveTasks();
+            if (activeTasks == null) {
+                return UIActions.ERROR;
+            }
             if (activeTasks.isEmpty()) {
                 OutputParser.writeBack_TRAIN();
             } else {
@@ -212,7 +219,7 @@ public enum UIActions implements UIAction {
 
     TRAIN_ID {
         public UIAction execute(Scanner scanner) {
-            Task currentTask = ClientController.getTask();
+            Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
             OutputParser.writeBack_TRAIN_ID(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
@@ -226,12 +233,11 @@ public enum UIActions implements UIAction {
         public UIAction execute(Scanner scanner) {
             System.out.println("Testing...");
             try {
-                float accuracy = ClientController.testCurrentTask();
+                float accuracy = UIController.getClientController().testCurrentTask();
+                if (Float.compare(accuracy, -1) == 0) return UIActions.ERROR;
                 System.out.println("Done - " + accuracy);
-            } catch (IOException e) {
-                e.printStackTrace();
             } finally {
-                ClientController.setTask(null);
+                UIController.getClientController().setTask(null);
             }
             return UIActions.MAIN;
         }
@@ -240,9 +246,13 @@ public enum UIActions implements UIAction {
     CLIENT_TRAIN {
         public UIAction execute(Scanner scanner) {
             System.out.println("Training...");
-            ClientController.trainCurrentTask();
-            System.out.println("Done");
-            ClientController.setTask(null);
+            try {
+                boolean status = UIController.getClientController().trainCurrentTask();
+                if (!status) return UIActions.ERROR;
+                System.out.println("Done");
+            } finally {
+                UIController.getClientController().setTask(null);
+            }
             return UIActions.MAIN;
         }
     },
@@ -264,13 +274,33 @@ public enum UIActions implements UIAction {
 
     ERROR {
         public UIAction execute(Scanner scanner) {
-            OutputParser.writeBack_ELSE();
-            UIController.memory.pop();
-            return UIController.memory.pop();
+            Errno errno = ClientController.errno;
+            if (errno != Errno.NONE)
+                OutputParser.writeBack_error(errno.getMessage());
+
+            UIActions nextAction = UIActions.nextAction(errno);
+            ClientController.errno = Errno.NONE;
+            if (nextAction == UIActions.ERROR) {
+                UIController.memory.pop();
+                return UIController.memory.pop();
+            } else return nextAction;
         }
     };
 
     public UIAction execute(Scanner scanner) {
+        return null;
+    }
+
+    static UIActions nextAction(Errno errno) {
+        if (errno == Errno.REMOTEEXC || errno == Errno.TASKS_SRC || errno == Errno.BAD_DATA_TYPE)
+            return null;
+        if (errno == Errno.FAIL_READ_DATASET || errno == Errno.FAIL_READ_H5 || errno == Errno.REMOTE_IOEXC || errno == Errno.BAD_LABEL_IN_TXT)
+            return UIActions.MAIN;
+        if (errno == Errno.CORRUPTED_BATCH || errno == Errno.IOEXC)
+            return UIActions.BACK;
+        if (errno == Errno.SYNTAX_ERR || errno == Errno.NO_TASK_IN_MAP || errno == Errno.NO_PATH_ON_SERVER)
+            return UIActions.ERROR;
+        // never reaches here
         return null;
     }
 
