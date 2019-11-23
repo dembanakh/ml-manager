@@ -1,5 +1,6 @@
 package client;
 
+import server.MLManagerException;
 import server.ServerAPI;
 import server.Task;
 import ui.OutputParser;
@@ -51,8 +52,11 @@ public class ClientController {
             server.refreshTasks();
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
+            return false;
+        } catch (MLManagerException e) {
             if (e.getMessage().equals(Utility.TASKS_SRC)) errno = Errno.TASKS_SRC;
-            else errno = Errno.REMOTEEXC;
+            else errno = Errno.NONE;
             return false;
         }
         return true;
@@ -71,8 +75,10 @@ public class ClientController {
             System.out.println(task);
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.REMOTEEXC;
+        } catch (MLManagerException e) {
             if (e.getMessage().equals(Utility.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
-            else errno = Errno.REMOTEEXC;
+            else errno = Errno.NONE;
         }
 
         if (task == null) {
@@ -109,8 +115,10 @@ public class ClientController {
             return status;
         } catch (RemoteException e) {
             e.printStackTrace();
+            errno = Errno.NONE;
+            return false;
+        } catch (MLManagerException e) {
             if (e.getMessage().equals(Utility.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
-            else errno = Errno.NONE;
             return false;
         }
     }
@@ -140,6 +148,9 @@ public class ClientController {
                         currentProvider.getDataType().toString(), currentProvider.getBatchSize());
             }
         } catch (RemoteException e) {
+            errno = Errno.REMOTEEXC;
+            return -1f;
+        } catch (MLManagerException e) {
             e.printStackTrace();
             switch (e.getMessage()) {
                 case Utility.MODELH5:
@@ -158,7 +169,7 @@ public class ClientController {
                     errno = Errno.BAD_LABEL_IN_TXT;
                     break;
                 default:
-                    errno = Errno.REMOTEEXC;
+                    errno = Errno.NONE;
                     break;
             }
             return -1f;

@@ -304,6 +304,10 @@ public enum UIActions implements UIAction {
             return UIActions.BACK;
         if (errno == Errno.SYNTAX_ERR || errno == Errno.NO_TASK_IN_MAP || errno == Errno.NO_PATH_ON_SERVER)
             return UIActions.RETRY;
+        if (errno == Errno.NONE) {
+            System.err.println("An unknown error occurred!");
+            return null;
+        }
         // never reaches here
         return null;
     }
