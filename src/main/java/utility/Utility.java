@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 
 public class Utility {
 
-    public final static String ROOT = "/home/dembanakh/.ml-manager/";
+    public final static String HOME = "/home/dembanakh/";
+    public final static String ROOT = HOME + ".ml-manager/";
     public final static String WEIGHTS = ROOT + "tasks-weights/";
     public final static String DATASETS = ROOT + "datasets/";
 

@@ -146,9 +146,8 @@ public class ClientController {
             return exists;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     @Remote

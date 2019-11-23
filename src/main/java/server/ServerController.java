@@ -114,7 +114,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
 
     @Override
     public boolean checkPath(String path) {
-        return Files.exists(Paths.get(path));
+        return Files.exists(Paths.get(path)) || Files.exists(Paths.get(Utility.HOME + path)) || Files.exists(Paths.get(Utility.DATASETS + path));
     }
 
     @Override
