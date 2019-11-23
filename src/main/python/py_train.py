@@ -18,6 +18,7 @@ def train(dataset, architecture, task_name):
         model.save(ROOT_MODELS + task_name + '.h5')
     else:
         input_shape = (224, 224, 3)
+        batch_size = 1  # subject to change, but Azure server has little RAM
         import os
         import numpy as np
         from keras.preprocessing import image
@@ -25,6 +26,23 @@ def train(dataset, architecture, task_name):
             samples = [i for i in os.listdir(dataset + '/samples')]
         except OSError:
             print 'There is no such directory', ROOT_DATASETS + dataset + '/samples'
+            return 0
+        if architecture == 'VGG16':
+            from keras.applications.vgg16 import VGG16, preprocess_input
+            model = VGG16()
+            for i in range(X.shape[0]):
+                X[i] = preprocess_input(X[i])
+        elif architecture == 'VGG19':
+            from keras.applications.vgg19 import VGG19, preprocess_input
+            model = VGG19()
+            for i in range(X.shape[0]):
+                X[i] = preprocess_input(X[i])
+        elif architecture == 'MobileNet':
+            from keras.applications.mobilenet import MobileNet, preprocess_input
+            model = MobileNet()
+            for i in range(X.shape[0]):
+                X[i] = preprocess_input(X[i])
+        else:
             return 0
         X = np.zeros((len(samples), input_shape[0], input_shape[1], input_shape[2]))  # maybe depends on architecture
         y = np.zeros((len(samples), ))
@@ -43,24 +61,8 @@ def train(dataset, architecture, task_name):
                 y[i] = int(f_lbl.read())
             except ValueError:
                 print 'File', ROOT_DATASETS + dataset + '/labels/' + sample.split('.')[0] + '.txt', 'doesn\'t contain integer'
-        if architecture == 'VGG16':
-            from keras.applications.vgg16 import VGG16, preprocess_input
-            model = VGG16()
-            for i in range(X.shape[0]):
-                X[i] = preprocess_input(X[i])
-        elif architecture == 'VGG19':
-            from keras.applications.vgg19 import VGG19, preprocess_input
-            model = VGG19()
-            for i in range(X.shape[0]):
-                X[i] = preprocess_input(X[i])
-        elif architecture == 'MobileNet':
-            from keras.applications.mobilenet import MobileNet, preprocess_input
-            model = MobileNet()
-            for i in range(X.shape[0]):
-                X[i] = preprocess_input(X[i])
-        else:
-            return 0
+                return 0
         model.compile(optimizer='adam', metrics=['accuracy'], loss='sparse_categorical_crossentropy')
-        model.fit(X, y)
+        model.fit(X, y, batch_size=batch_size)
         model.save(ROOT_MODELS + task_name + '.h5')
     return 1
