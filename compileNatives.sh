@@ -5,3 +5,4 @@ g++ -shared -o target/cpp/libnative.so -fPIC -I/usr/include/python2.7 target/cpp
 
 cp src/main/python/py_train.py target/cpp
 cp src/main/python/py_test_local.py target/cpp
+cp src/main/python/py_test_remote.py target/cpp

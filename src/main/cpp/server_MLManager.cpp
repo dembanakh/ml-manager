@@ -156,7 +156,7 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
         } catch (...) {
             returnValue = -2;
         }
-        if (!returnValue) {}
+        if (!returnValue) {
             npy_intp dims[4] {batch_size, img_height, img_width, 3};
             np_arg = reinterpret_cast<PyArrayObject*>(PyArray_SimpleNewFromData(4, dims, NPY_INT32, reinterpret_cast<void*>(batch)));
             PyTuple_SetItem(pArgs, 1, reinterpret_cast<PyObject*>(np_arg));
@@ -224,7 +224,6 @@ JNIEXPORT jfloat JNICALL Java_server_MLManager_testRemote
 
         Py_DECREF(pArgs);
         Py_DECREF(pValue);
-        Py_DECREF(np_arg);
     } else {
         PyErr_Print();
     }
