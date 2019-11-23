@@ -68,9 +68,11 @@ public class ClientController {
         Task task = null;
         try {
             task = server.getActiveTaskById(id);
+            System.out.println(task);
         } catch (RemoteException e) {
             e.printStackTrace();
-            errno = Errno.REMOTEEXC;
+            if (e.getMessage().equals(Utility.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
+            else errno = Errno.REMOTEEXC;
         }
 
         if (task == null) {

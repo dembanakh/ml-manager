@@ -257,6 +257,13 @@ public enum UIActions implements UIAction {
         }
     },
 
+    RETRY {
+        public UIAction execute(Scanner scanner) {
+            UIController.memory.pop();
+            return UIController.memory.pop();
+        }
+    },
+
     BACK {
         public UIAction execute(Scanner scanner) {
             UIController.memory.pop();
@@ -280,10 +287,7 @@ public enum UIActions implements UIAction {
 
             UIActions nextAction = UIActions.nextAction(errno);
             ClientController.errno = Errno.NONE;
-            if (nextAction == UIActions.ERROR) {
-                UIController.memory.pop();
-                return UIController.memory.pop();
-            } else return nextAction;
+            return nextAction;
         }
     };
 
@@ -299,7 +303,7 @@ public enum UIActions implements UIAction {
         if (errno == Errno.CORRUPTED_BATCH || errno == Errno.IOEXC)
             return UIActions.BACK;
         if (errno == Errno.SYNTAX_ERR || errno == Errno.NO_TASK_IN_MAP || errno == Errno.NO_PATH_ON_SERVER)
-            return UIActions.ERROR;
+            return UIActions.RETRY;
         // never reaches here
         return null;
     }

@@ -75,10 +75,11 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     }
 
     @Override
-    public Task getActiveTaskById(String id) {
+    public Task getActiveTaskById(String id) throws RemoteException {
         Task task = taskManager.getActiveTasks().get(id);
         System.out.println("IN: getActiveTaskById");
         System.out.println("OUT: " + task);
+        if (task == null) throw new RemoteException(Utility.NO_TASK_IN_MAP);
         return task;
     }
 

@@ -23,7 +23,10 @@ public class InputParser {
                 if (line.equals(Command.CREATE.getUserLine())) return UIActions.TASKS_CREATE;
                 if (line.startsWith(Command.DELETE.getUserLine())) {
                     String[] split = line.split(" ");
-                    if (split.length != 2) return UIActions.ERROR;
+                    if (split.length != 2) {
+                        ClientController.errno = Errno.SYNTAX_ERR;
+                        return UIActions.ERROR;
+                    }
                     if (UIController.getClientController().setTask(split[1]))
                         return UIActions.TASKS_DELETE;
                     else
@@ -31,7 +34,10 @@ public class InputParser {
                 }
                 if (line.startsWith(Command.CHANGE.getUserLine())) {
                     String[] split = line.split(" ");
-                    if (split.length != 2) return UIActions.ERROR;
+                    if (split.length != 2) {
+                        ClientController.errno = Errno.SYNTAX_ERR;
+                        return UIActions.ERROR;
+                    }
                     if (UIController.getClientController().setTask(split[1]))
                         return UIActions.TASKS_CHANGE;
                     else
@@ -50,7 +56,10 @@ public class InputParser {
             case TEST:
                 if (line.startsWith(Command.ID.getUserLine())) {
                     String[] split = line.split(" ");
-                    if (split.length != 2) return UIActions.ERROR;
+                    if (split.length != 2) {
+                        ClientController.errno = Errno.SYNTAX_ERR;
+                        return UIActions.ERROR;
+                    }
                     if (UIController.getClientController().setTask(split[1]))
                         return UIActions.TEST_ID;
                     else
@@ -64,7 +73,10 @@ public class InputParser {
                 if (line.equals(Command.MAIN.getUserLine())) return UIActions.MAIN;
             {
                 String[] split = line.split(" ");
-                if (split.length != 2) return UIActions.ERROR;
+                if (split.length != 2) {
+                    ClientController.errno = Errno.SYNTAX_ERR;
+                    return UIActions.ERROR;
+                }
                 if (!split[0].equals(Command.LOCAL.getUserLine()) && !split[0].equals((Command.REMOTE.getUserLine()))) {
                     ClientController.errno = Errno.SYNTAX_ERR;
                     return UIActions.ERROR;
@@ -80,7 +92,10 @@ public class InputParser {
             case TRAIN:
                 if (line.startsWith(Command.ID.getUserLine())) {
                     String[] split = line.split(" ");
-                    if (split.length != 2) return UIActions.ERROR;
+                    if (split.length != 2) {
+                        ClientController.errno = Errno.SYNTAX_ERR;
+                        return UIActions.ERROR;
+                    }
                     if (UIController.getClientController().setTask(split[1]))
                         return UIActions.TRAIN_ID;
                     else
