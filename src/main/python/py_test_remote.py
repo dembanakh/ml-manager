@@ -13,15 +13,15 @@ def test(task_name, data_path, data_type, batch_size):
         print data_type
         return -2
     try:
-        samples = [i for i in os.listdir(data_path)]
+        samples = [i for i in os.listdir(data_path + '/samples')]
         path = data_path
     except OSError:
         try:
-            samples = [i for i in os.listdir(ROOT + data_path)]
+            samples = [i for i in os.listdir(ROOT + data_path + '/samples')]
             path = ROOT + data_path
         except OSError:
             try:
-                samples = [i for i in os.listdir(ROOT_DATASETS + data_path)]
+                samples = [i for i in os.listdir(ROOT_DATASETS + data_path + '/samples')]
                 path = ROOT_DATASETS + data_path
             except OSError:
                 print 'Cannot find', data_path
@@ -31,12 +31,14 @@ def test(task_name, data_path, data_type, batch_size):
     except IOError:
         print 'Cannot load the model from', ROOT_MODELS + task_name + '.h5'
         return -1
+    # print path
     X = np.zeros((batch_size, input_shape[0], input_shape[1], input_shape[2]))  # maybe depends on architecture
     y = np.zeros((batch_size, ))
     num_batches = len(samples) / batch_size
     correct = 0
     for b in range(num_batches):
         for i, sample in enumerate(samples[b * batch_size:(b+1) * batch_size]):
+            # print sample
             try:
                 img = image.load_img(path + '/samples/' + sample, target_size=input_shape)
             except IOError:
