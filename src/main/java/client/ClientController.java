@@ -108,6 +108,21 @@ public class ClientController {
     }
 
     @Remote
+    public boolean checkCurrentTaskValidity() {
+        try {
+            return currentTask.equals(server.getActiveTaskById(currentTask.getTitle()));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            errno = Errno.NONE;
+            return false;
+        } catch (MLManagerException e) {
+            e.printStackTrace();
+            errno = Errno.CONCURRENT_TASK_MODIFICATION;
+            return false;
+        }
+    }
+
+    @Remote
     public boolean trainCurrentTask() {
         try {
             boolean status = server.trainTask(currentTask.getTitle());

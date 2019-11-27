@@ -51,6 +51,14 @@ public class Task implements Serializable {
         return builder.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Task)) return false;
+
+        Task t = (Task) o;
+        return t.title.equals(title) && t.dataset.equals(dataset) && t.neuralNet.equals(neuralNet);
+    }
+
     private void readObject(ObjectInputStream os) throws IOException, ClassNotFoundException {
         os.defaultReadObject();
         this.dataset = new Dataset(this.dataset);

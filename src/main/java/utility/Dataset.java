@@ -29,4 +29,12 @@ public class Dataset implements Serializable {
         return name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Dataset)) return false;
+
+        Dataset d = (Dataset) o;
+        return d.name.equals(name);
+    }
+
 }

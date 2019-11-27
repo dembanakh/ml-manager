@@ -99,6 +99,9 @@ public enum UIActions implements UIAction {
             OutputParser.writeBack_TASKS_DELETE(id);
             String check = scanner.nextLine();
             if (InputParser.parseSimpleBoolean(check, Command.YES.getUserLine())) {
+                if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                    return UIActions.ERROR;
+                }
                 if (!UIController.getClientController().deleteTask(id)) return UIActions.ERROR;
                 System.out.println("Deleted.");
             } else if (InputParser.parseSimpleBoolean(check, Command.NO.getUserLine())){
@@ -124,6 +127,9 @@ public enum UIActions implements UIAction {
 
     TASKS_CHANGE_DATASET {
         public UIAction execute(Scanner scanner) {
+            if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                return UIActions.ERROR;
+            }
             Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
@@ -135,10 +141,13 @@ public enum UIActions implements UIAction {
             OutputParser.writeBack_TASKS_CHANGE_DATASET(currentTask.getTitle(), datasets);
             String input = scanner.nextLine();
             if (!datasets.contains(input)) {
-                System.err.println("There is no such dataset!\nAborting...");
+                System.out.println("There is no such dataset!\nAborting...");
                 return UIActions.BACK;
             }
 
+            if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                return UIActions.ERROR;
+            }
             if (!UIController.getClientController().changeTask_dataset(currentTask.getTitle(), input)) return UIActions.ERROR;
 
             System.out.println("Changed.");
@@ -150,6 +159,9 @@ public enum UIActions implements UIAction {
 
     TASKS_CHANGE_NEURALNET {
         public UIAction execute(Scanner scanner) {
+            if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                return UIActions.ERROR;
+            }
             Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
@@ -161,10 +173,13 @@ public enum UIActions implements UIAction {
             OutputParser.writeBack_TASKS_CHANGE_NEURALNET(currentTask.getTitle(), networks);
             String input = scanner.nextLine();
             if (!networks.contains(input)) {
-                System.err.println("There is no such neural network architecture!\nAborting...");
+                System.out.println("There is no such neural network architecture!\nAborting...");
                 return UIActions.BACK;
             }
 
+            if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                return UIActions.ERROR;
+            }
             if (!UIController.getClientController().changeTask_neuralNet(currentTask.getTitle(), input)) return UIActions.ERROR;
 
             System.out.println("Changed.");
@@ -190,6 +205,9 @@ public enum UIActions implements UIAction {
 
     TEST_ID {
         public UIAction execute(Scanner scanner) {
+            if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                return UIActions.ERROR;
+            }
             Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
@@ -219,6 +237,9 @@ public enum UIActions implements UIAction {
 
     TRAIN_ID {
         public UIAction execute(Scanner scanner) {
+            if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                return UIActions.ERROR;
+            }
             Task currentTask = UIController.getClientController().getTask();
             OutputParser.writeBack_currentTask(currentTask.getDataset().getName(), currentTask.getNeuralNet().toString());
 
@@ -233,6 +254,9 @@ public enum UIActions implements UIAction {
         public UIAction execute(Scanner scanner) {
             System.out.println("Testing...");
             try {
+                if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                    return UIActions.ERROR;
+                }
                 float accuracy = UIController.getClientController().testCurrentTask();
                 if (Float.compare(accuracy, -1) == 0) return UIActions.ERROR;
                 System.out.println("Done - " + accuracy);
@@ -247,6 +271,9 @@ public enum UIActions implements UIAction {
         public UIAction execute(Scanner scanner) {
             System.out.println("Training...");
             try {
+                if (!UIController.getClientController().checkCurrentTaskValidity()) {
+                    return UIActions.ERROR;
+                }
                 boolean status = UIController.getClientController().trainCurrentTask();
                 if (!status) return UIActions.ERROR;
                 System.out.println("Done");
@@ -299,7 +326,9 @@ public enum UIActions implements UIAction {
     static UIActions nextAction(Errno errno) {
         if (errno == Errno.REMOTEEXC || errno == Errno.TASKS_SRC || errno == Errno.BAD_DATA_TYPE)
             return null;
-        if (errno == Errno.FAIL_READ_DATASET || errno == Errno.FAIL_READ_H5 || errno == Errno.REMOTE_IOEXC || errno == Errno.BAD_LABEL_IN_TXT)
+        if (errno == Errno.FAIL_READ_DATASET || errno == Errno.FAIL_READ_H5 ||
+                errno == Errno.REMOTE_IOEXC || errno == Errno.BAD_LABEL_IN_TXT ||
+                errno == Errno.CONCURRENT_TASK_MODIFICATION)
             return UIActions.MAIN;
         if (errno == Errno.CORRUPTED_BATCH || errno == Errno.IOEXC)
             return UIActions.BACK;
