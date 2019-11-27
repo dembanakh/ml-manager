@@ -44,6 +44,16 @@ def train(dataset, architecture, task_name):
             model = MobileNet()
             for i in range(X.shape[0]):
                 X[i] = preprocess_input(X[i])
+        elif architecture == 'ResNet':
+            from keras.applications.resnet import ResNet50, preprocess_input
+            model = ResNet50()
+            for i in range(X.shape[0]):
+                X[i] = preprocess_input(X[i])
+        elif architecture == 'DenseNet':
+            from keras.applications.densenet import DenseNet121, preprocess_input
+            model = DenseNet121()
+            for i in range(X.shape[0]):
+                X[i] = preprocess_input(X[i])
         else:
             return 0
         for i, sample in enumerate(samples):

@@ -28,9 +28,9 @@ public class ClientController {
     public ClientController() {
         try {
             server = (ServerAPI) Naming.lookup("rmi://40.87.143.114:1099/ServerAPI");
-            System.out.println(server);
+            //System.out.println(server);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         currentTask = null;
     }
@@ -40,7 +40,7 @@ public class ClientController {
         try {
             return server.getActiveTasks();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return null;
         }
@@ -51,7 +51,7 @@ public class ClientController {
         try {
             server.refreshTasks();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return false;
         } catch (MLManagerException e) {
@@ -73,7 +73,7 @@ public class ClientController {
         try {
             task = server.getActiveTaskById(id);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return false;
         } catch (MLManagerException e) {
@@ -96,7 +96,7 @@ public class ClientController {
         try {
             server.addTask(task);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return false;
         }
@@ -112,11 +112,11 @@ public class ClientController {
         try {
             return currentTask.equals(server.getActiveTaskById(currentTask.getTitle()));
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.NONE;
             return false;
         } catch (MLManagerException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.CONCURRENT_TASK_MODIFICATION;
             return false;
         }
@@ -130,7 +130,7 @@ public class ClientController {
             else errno = Errno.NONE;
             return status;
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.NONE;
             return false;
         } catch (MLManagerException e) {
@@ -167,7 +167,7 @@ public class ClientController {
             errno = Errno.REMOTEEXC;
             return -1f;
         } catch (MLManagerException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             switch (e.getErrorCause()) {
                 case MODELH5:
                     errno = Errno.FAIL_READ_H5;
@@ -199,7 +199,7 @@ public class ClientController {
             currentProvider = new BatchProvider(path, Utility.DataType.IMAGE, 1, true);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.IOEXC;
             return false;
         }
@@ -213,11 +213,11 @@ public class ClientController {
             else errno = Errno.NO_PATH_ON_SERVER;
             return exists;
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.IOEXC;
             return false;
         }
@@ -228,7 +228,7 @@ public class ClientController {
         try {
             server.deleteTask(id);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return false;
         }
@@ -242,7 +242,7 @@ public class ClientController {
             if (!status) errno = Errno.NO_TASK_IN_MAP;
             return status;
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return false;
         }
@@ -255,7 +255,7 @@ public class ClientController {
             if (!status) errno = Errno.NO_TASK_IN_MAP;
             return status;
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return false;
         }
@@ -266,7 +266,7 @@ public class ClientController {
         try {
             return server.getDatasets();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return null;
         }
@@ -277,7 +277,7 @@ public class ClientController {
         try {
             return server.getNeuralNets();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             errno = Errno.REMOTEEXC;
             return null;
         }

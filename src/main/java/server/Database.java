@@ -6,12 +6,11 @@ import java.net.UnknownHostException;
 
 class Database {
 
-    private MongoClient client;
     private DB database;
 
     Database() {
         try {
-            client = new MongoClient();
+            MongoClient client = new MongoClient();
             database = client.getDB("ml_manager");
             //init();
         } catch (UnknownHostException e) {
@@ -26,7 +25,6 @@ class Database {
         DBObject coco = new BasicDBObject("_id", "coco")
                 .append("name", "COCO");
         datasets.insert(mnist, coco);
-        //TODO: remove testing task
         DBCollection tasks = database.getCollection("tasks");
         DBObject test = Database.toDBObject(new Task("test", "IMAGENET", "MobileNet"));
         tasks.insert(test);
