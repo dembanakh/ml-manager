@@ -24,7 +24,8 @@ public class InputParser {
                 if (line.startsWith(Command.DELETE.getUserLine())) {
                     String[] split = line.split(" ");
                     if (split.length != 2) {
-                        ClientController.errno = Errno.SYNTAX_ERR;
+                        if (split.length > 2) ClientController.errno = Errno.INPUT_WITH_SPACE;
+                        else ClientController.errno = Errno.SYNTAX_ERR;
                         return UIActions.ERROR;
                     }
                     if (UIController.getClientController().setTask(split[1]))
@@ -35,7 +36,8 @@ public class InputParser {
                 if (line.startsWith(Command.CHANGE.getUserLine())) {
                     String[] split = line.split(" ");
                     if (split.length != 2) {
-                        ClientController.errno = Errno.SYNTAX_ERR;
+                        if (split.length > 2) ClientController.errno = Errno.INPUT_WITH_SPACE;
+                        else ClientController.errno = Errno.SYNTAX_ERR;
                         return UIActions.ERROR;
                     }
                     if (UIController.getClientController().setTask(split[1]))
@@ -57,7 +59,8 @@ public class InputParser {
                 if (line.startsWith(Command.ID.getUserLine())) {
                     String[] split = line.split(" ");
                     if (split.length != 2) {
-                        ClientController.errno = Errno.SYNTAX_ERR;
+                        if (split.length > 2) ClientController.errno = Errno.INPUT_WITH_SPACE;
+                        else ClientController.errno = Errno.SYNTAX_ERR;
                         return UIActions.ERROR;
                     }
                     if (UIController.getClientController().setTask(split[1]))
@@ -74,7 +77,8 @@ public class InputParser {
             {
                 String[] split = line.split(" ");
                 if (split.length != 2) {
-                    ClientController.errno = Errno.SYNTAX_ERR;
+                    if (split.length > 2) ClientController.errno = Errno.INPUT_WITH_SPACE;
+                    else ClientController.errno = Errno.SYNTAX_ERR;
                     return UIActions.ERROR;
                 }
                 if (!split[0].equals(Command.LOCAL.getUserLine()) && !split[0].equals((Command.REMOTE.getUserLine()))) {
@@ -93,7 +97,8 @@ public class InputParser {
                 if (line.startsWith(Command.ID.getUserLine())) {
                     String[] split = line.split(" ");
                     if (split.length != 2) {
-                        ClientController.errno = Errno.SYNTAX_ERR;
+                        if (split.length > 2) ClientController.errno = Errno.INPUT_WITH_SPACE;
+                        else ClientController.errno = Errno.SYNTAX_ERR;
                         return UIActions.ERROR;
                     }
                     if (UIController.getClientController().setTask(split[1]))

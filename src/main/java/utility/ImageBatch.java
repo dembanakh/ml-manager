@@ -5,14 +5,18 @@ import java.awt.image.DataBufferByte;
 
 class ImageBatch implements Batch {
 
+    private static final long serialVersionUID = 228L;
+
     private final int batchSize;
     private final int[][][] images;
     private final int[] labels;
 
     ImageBatch(int[][][] img, int[] labels) {
-        this.images = img;
-        this.labels = labels;
+        this.images = new int[][][]{};
+        this.labels = new int[]{};
         this.batchSize = this.labels.length;
+        System.arraycopy(img, 0, this.images, 0, img.length * img[0].length * img[0][0].length);
+        System.arraycopy(labels, 0, this.labels, 0, this.batchSize);
     }
 
     public int getSize() {

@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 class TaskManager {
 
@@ -16,7 +17,7 @@ class TaskManager {
     private Database db;
 
     TaskManager() {
-        activeTasks = new HashMap<>();
+        activeTasks = new ConcurrentHashMap<>();
         db = new Database();
     }
 

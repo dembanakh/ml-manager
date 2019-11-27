@@ -55,7 +55,7 @@ public class ClientController {
             errno = Errno.REMOTEEXC;
             return false;
         } catch (MLManagerException e) {
-            if (e.getMessage().equals(Utility.TASKS_SRC)) errno = Errno.TASKS_SRC;
+            if (e.getErrorCause().equals(Utility.ErrorCause.TASKS_SRC)) errno = Errno.TASKS_SRC;
             else errno = Errno.NONE;
             return false;
         }
@@ -77,7 +77,7 @@ public class ClientController {
             errno = Errno.REMOTEEXC;
             return false;
         } catch (MLManagerException e) {
-            if (e.getMessage().equals(Utility.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
+            if (e.getErrorCause().equals(Utility.ErrorCause.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
             else errno = Errno.NONE;
             return false;
         }
@@ -119,7 +119,7 @@ public class ClientController {
             errno = Errno.NONE;
             return false;
         } catch (MLManagerException e) {
-            if (e.getMessage().equals(Utility.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
+            if (e.getErrorCause().equals(Utility.ErrorCause.NO_TASK_IN_MAP)) errno = Errno.NO_TASK_IN_MAP;
             return false;
         }
     }
@@ -153,20 +153,20 @@ public class ClientController {
             return -1f;
         } catch (MLManagerException e) {
             e.printStackTrace();
-            switch (e.getMessage()) {
-                case Utility.MODELH5:
+            switch (e.getErrorCause()) {
+                case MODELH5:
                     errno = Errno.FAIL_READ_H5;
                     break;
-                case Utility.CORRUPTED_BATCH:
+                case CORRUPTED_BATCH:
                     errno = Errno.CORRUPTED_BATCH;
                     break;
-                case Utility.REMOTE_IOEXC:
+                case REMOTE_IOEXC:
                     errno = Errno.REMOTE_IOEXC;
                     break;
-                case Utility.BAD_DATA_TYPE:
+                case BAD_DATA_TYPE:
                     errno = Errno.BAD_DATA_TYPE;
                     break;
-                case Utility.BAD_LABEL:
+                case BAD_LABEL:
                     errno = Errno.BAD_LABEL_IN_TXT;
                     break;
                 default:

@@ -13,7 +13,8 @@ public enum Errno {
     NO_PATH_ON_SERVER("Specified path was not found on the server"),
     REMOTE_IOEXC("An error occurred when reading in some files at the server"),
     BAD_DATA_TYPE("Server received illegal argument for the dataType, which is very unlikely to happen, so there is probably a bug in the source code"),
-    BAD_LABEL_IN_TXT("Some label file (*.txt) contains non-integer data");
+    BAD_LABEL_IN_TXT("Some label file (*.txt) contains non-integer data"),
+    INPUT_WITH_SPACE("This input must contain no spaces");
 
     private final String message;
 

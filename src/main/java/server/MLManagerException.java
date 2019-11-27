@@ -1,7 +1,17 @@
 package server;
 
+import utility.Utility;
+
 public class MLManagerException extends RuntimeException {
-    public MLManagerException(String message) {
-        super(message);
+
+    private Utility.ErrorCause cause;
+
+    MLManagerException(Utility.ErrorCause cause) {
+        this.cause = cause;
     }
+
+    public Utility.ErrorCause getErrorCause() {
+        return cause;
+    }
+
 }

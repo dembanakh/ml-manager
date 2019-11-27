@@ -3,9 +3,13 @@ package server;
 import utility.Dataset;
 import utility.NeuralNet;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class Task implements Serializable {
+
+    private static final long serialVersionUID = 230L;
 
     private String title;
 
@@ -34,7 +38,7 @@ public class Task implements Serializable {
         return neuralNet;
     }
 
-    public void setNeuralNet(String neuralNet) {
+    void setNeuralNet(String neuralNet) {
         this.neuralNet = NeuralNet.valueOf(neuralNet);
     }
 
@@ -45,5 +49,10 @@ public class Task implements Serializable {
         builder.append(" + ");
         builder.append(neuralNet.toString());
         return builder.toString();
+    }
+
+    private void readObject(ObjectInputStream os) throws IOException, ClassNotFoundException {
+        os.defaultReadObject();
+        this.dataset = new Dataset(this.dataset);
     }
 }

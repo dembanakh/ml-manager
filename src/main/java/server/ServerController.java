@@ -1,6 +1,5 @@
 package server;
 
-import client.Remote;
 import utility.Batch;
 import utility.Dataset;
 import utility.NeuralNet;
@@ -13,6 +12,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ServerController extends UnicastRemoteObject implements ServerAPI {
 
@@ -21,99 +21,133 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
     private NeuralNetManager neuralNetManager;
     private MLManager mlManager;
 
+    private ReentrantLock lock;
+
     public ServerController() throws RemoteException {
         taskManager = new TaskManager();
         datasetManager = new DatasetManager();
         neuralNetManager = new NeuralNetManager();
         mlManager = new MLManager();
+
+        lock = new ReentrantLock();
     }
 
-    public void start() throws MLManagerException {
+    public void start() {
         System.out.println("start");
 
         try {
             datasetManager.load();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            throw new MLManagerException("");
         }
 
         try {
             neuralNetManager.load();
         } catch (FileNotFoundException e) {
             System.err.println("networks.src file not found or one of data directories doesn't exist!");
-            throw new MLManagerException("");
         } catch (NoSuchMLObjectException e) {
             System.err.println("networks.src file contains illegal architecture name!");
-            throw new MLManagerException("");
         }
 
         try {
             taskManager.load(datasetManager, neuralNetManager);
         } catch (NoSuchMLObjectException e) {
             System.err.println("A task from collection \"tasks\" contains non-existing dataset or neural network!");
-            throw new MLManagerException("");
         }
     }
 
     @Override
     public Map<String, Task> getActiveTasks() {
-        System.out.println("IN: getActiveTasks");
-        System.out.println("OUT: " + taskManager.getActiveTasks());
-        return taskManager.getActiveTasks();
+        lock.lock();
+        try {
+            Map<String, Task> activeTasks = taskManager.getActiveTasks();
+            System.out.println("IN: getActiveTasks");
+            System.out.println("OUT: " + activeTasks);
+            return activeTasks;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public void refreshTasks() throws MLManagerException {
+        lock.lock();
         try {
             System.out.println("IN: refreshTasks");
             taskManager.load(datasetManager, neuralNetManager);
             System.out.println("OUT: -");
         } catch (NoSuchMLObjectException e) {
             System.err.println("A task from tasks.src contains non-existing dataset or neural network!");
-            throw new MLManagerException(Utility.TASKS_SRC);
+            throw new MLManagerException(Utility.ErrorCause.TASKS_SRC);
+        } finally {
+            lock.unlock();
         }
     }
 
     @Override
     public Task getActiveTaskById(String id) throws MLManagerException {
-        Task task = taskManager.getActiveTasks().get(id);
-        System.out.println("IN: getActiveTaskById");
-        System.out.println("OUT: " + task);
-        if (task == null) throw new MLManagerException(Utility.NO_TASK_IN_MAP);
-        return task;
+        lock.lock();
+        try {
+            Task task = taskManager.getActiveTasks().get(id);
+            System.out.println("IN: getActiveTaskById");
+            System.out.println("OUT: " + task);
+            if (task == null) throw new MLManagerException(Utility.ErrorCause.NO_TASK_IN_MAP);
+            return task;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public void addTask(Task task) {
-        System.out.println("IN: addTask");
-        System.out.println("OUT: " + task.getTitle());
-        taskManager.addTask(task);
+        lock.lock();
+        try {
+            System.out.println("IN: addTask");
+            System.out.println("OUT: " + task.getTitle());
+            taskManager.addTask(task);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public void deleteTask(String id) {
-        System.out.println("IN: deleteTask");
-        System.out.println("OUT: -");
-        taskManager.deleteTask(id);
+        lock.lock();
+        try {
+            System.out.println("IN: deleteTask");
+            System.out.println("OUT: -");
+            taskManager.deleteTask(id);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public boolean changeTask_dataset(String id, String dataset) {
-        System.out.println("IN: changeTask_dataset");
-        if (!taskManager.hasTask(id)) return false;
-        System.out.println("OUT: " + taskManager.hasTask(id));
-        taskManager.changeTask_dataset(id, dataset);
-        return true;
+        lock.lock();
+        try {
+            System.out.println("IN: changeTask_dataset");
+            if (!taskManager.hasTask(id)) return false;
+            System.out.println("OUT: " + taskManager.hasTask(id));
+            taskManager.changeTask_dataset(id, dataset);
+            return true;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public boolean changeTask_neuralNet(String id, String net) {
-        System.out.println("IN: changeTask_neuralNet");
-        if (!taskManager.hasTask(id)) return false;
-        System.out.println("OUT: " + taskManager.hasTask(id));
-        taskManager.changeTask_neuralNet(id, net);
-        return true;
+        lock.lock();
+        try {
+            System.out.println("IN: changeTask_neuralNet");
+            if (!taskManager.hasTask(id)) return false;
+            System.out.println("OUT: " + taskManager.hasTask(id));
+            taskManager.changeTask_neuralNet(id, net);
+            return true;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -136,7 +170,7 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         Task task = taskManager.getTask(id);
         if (task == null) {
             System.err.println("ERROR: No such task in map.");
-            throw new MLManagerException(Utility.NO_TASK_IN_MAP);
+            throw new MLManagerException(Utility.ErrorCause.NO_TASK_IN_MAP);
         }
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
@@ -154,15 +188,15 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         Task task = taskManager.getTask(id);
         if (task == null) {
             System.err.println("ERROR: No such task in map.");
-            throw new MLManagerException(Utility.NO_TASK_IN_MAP);
+            throw new MLManagerException(Utility.ErrorCause.NO_TASK_IN_MAP);
         }
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
         System.out.println("IN: testTask " + ds + " " + nn);
         int correct = mlManager.testLocal(task.getTitle(), b.getData(), b.getLabels());
         System.out.println("OUT: " + correct);
-        if (correct == -1) throw new MLManagerException(Utility.MODELH5);
-        else if (correct == -2) throw new MLManagerException(Utility.CORRUPTED_BATCH);
+        if (correct == -1) throw new MLManagerException(Utility.ErrorCause.MODELH5);
+        else if (correct == -2) throw new MLManagerException(Utility.ErrorCause.CORRUPTED_BATCH);
         return correct;
     }
 
@@ -171,16 +205,16 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         Task task = taskManager.getTask(id);
         if (task == null) {
             System.err.println("ERROR: No such task in map.");
-            throw new MLManagerException(Utility.NO_TASK_IN_MAP);
+            throw new MLManagerException(Utility.ErrorCause.NO_TASK_IN_MAP);
         }
         Dataset ds = task.getDataset();
         NeuralNet nn = task.getNeuralNet();
         System.out.println("IN: testTask " + ds + " " + nn);
         float correct = mlManager.testRemote(task.getTitle(), path, dataType, batchSize);
         System.out.println("OUT: " + correct);
-        if (Float.compare(correct, -1) == 0) throw new MLManagerException(Utility.REMOTE_IOEXC);
-        else if (Float.compare(correct, -2) == 0) throw new MLManagerException(Utility.BAD_DATA_TYPE);
-        else if (Float.compare(correct, -3) == 0) throw new MLManagerException(Utility.BAD_LABEL);
+        if (Float.compare(correct, -1) == 0) throw new MLManagerException(Utility.ErrorCause.REMOTE_IOEXC);
+        else if (Float.compare(correct, -2) == 0) throw new MLManagerException(Utility.ErrorCause.BAD_DATA_TYPE);
+        else if (Float.compare(correct, -3) == 0) throw new MLManagerException(Utility.ErrorCause.BAD_LABEL);
         return correct;
     }
 
