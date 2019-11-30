@@ -32,7 +32,10 @@ class TaskManager {
                 activeTasks.clear();
                 dataMan.clear();
                 netMan.clear();
-                throw new NoSuchMLObjectException(title, dataset, net);
+                if (!dataMan.hasDataset(dataset)) System.err.println(dataset + " is illegal");
+                if (!netMan.hasNeuralNet(net)) System.err.println(net + " is illegal");
+                //throw new NoSuchMLObjectException(title, dataset, net);
+                continue;
             }
             activeTasks.put(title, new Task(title, dataset, net));
         }
