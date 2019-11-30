@@ -33,6 +33,9 @@ class ImageBatch implements Batch {
         return new Object[] {labels};
     }
 
+    /*
+     * Converts an BufferedImage to 2-D array of pixels.
+     */
     static int[][] convertTo2D(BufferedImage image) {
 
         final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();

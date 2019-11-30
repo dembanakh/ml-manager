@@ -14,6 +14,9 @@ class NeuralNetManager {
 
     private List<NeuralNet> neuralNets = new ArrayList<>();
 
+    /*
+     * Loads list of available network architectures from $HOME/ml-manager/networks.src
+     */
     void load() throws NoSuchMLObjectException, FileNotFoundException {
         String sourcePath = Utility.ROOT + "networks.src";
         Scanner scanner = new Scanner(new File(sourcePath));

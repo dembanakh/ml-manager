@@ -2,7 +2,7 @@ package ui.commands;
 
 public enum Command {
     EXIT("exit"), TRAIN("train"), TEST("test"), TASKS("tasks"),
-    NEW("new"), ID("task"),
+    ID("task"),
     YES("Yes"), NO("no"),
     BACK("back"), MAIN("main"),
     CREATE("create"), DELETE("delete"), CHANGE("change"),

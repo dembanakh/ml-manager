@@ -5,6 +5,10 @@
 #include "Python.h"
 #include "numpy/arrayobject.h"
 
+/*
+ * Native function train(dataset: string, architecture: atring, taskName: string).
+ * Calls py_train.py for training the @param taskName on @param dataset using @param architecture.
+ */
 JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thisObject, jstring dataset, jstring architecture, jstring taskName) {
     PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pValue;
 
@@ -52,6 +56,9 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
 	return returnValue;
 }
 
+/*
+ * Converts java array int[][][] (image batch representation) to cpp int****.
+ */
 int **** convertSamplesToIntTensor(JNIEnv * env, jobjectArray data, int * batchSize, int * imgHeight, int * imgWidth) {
     int batch_size = env->GetArrayLength(data);
     //std::cout << batch_size << std::endl;
@@ -93,6 +100,9 @@ int **** convertSamplesToIntTensor(JNIEnv * env, jobjectArray data, int * batchS
     return batch;
 }
 
+/*
+ * Converts java array int[] (labels) to cpp int*.
+ */
 int * convertLabelsToIntTensor(JNIEnv * env, jobjectArray data, int & batchSize) {
     jintArray jlabels = (jintArray) env->GetObjectArrayElement(data, 0);
     jint * jlabel = env->GetIntArrayElements(jlabels, 0);
@@ -122,6 +132,10 @@ void freeLabelsMemory(int * batch) {
     delete[] batch;
 }
 
+/*
+ * Native function testLocal(taskName: string, data: Object[], labels: Object[]).
+ * Constructing numpy array for batch and calling py_test_local.py
+ */
 JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
   (JNIEnv * env, jobject thisObject, jstring taskName, jobjectArray data, jobjectArray labels) {
     PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pValue;
@@ -189,6 +203,10 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
     return returnValue;
 }
 
+/*
+ * Native function testRemote(taskName: string, dataPath: string, dataType: enum.toString(), batchSize: int).
+ * Calls py_test_remote.py
+ */
 JNIEXPORT jfloat JNICALL Java_server_MLManager_testRemote
 (JNIEnv * env, jobject thisObject, jstring taskName, jstring dataPath, jstring dataType, jint batchSize) {
     PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pValue;

@@ -17,6 +17,11 @@ class DatasetManager {
 
     private List<Dataset> datasets = new ArrayList<>();
 
+    /*
+     * Loads list of available datasets from $HOME/ml-manager/datasets.src
+     * For each dataset X (except IMAGENET) checks $HOME/.ml-manager/datasets/X structure (/samples and /labels subfolders)
+     * and whether each sample has its label
+     */
     void load() throws FileNotFoundException {
         String sourcePath = Utility.ROOT + "datasets.src";
         Scanner scanner = new Scanner(new File(sourcePath));

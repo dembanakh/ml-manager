@@ -200,6 +200,9 @@ public class ServerController extends UnicastRemoteObject implements ServerAPI {
         return correct;
     }
 
+    /*
+     * Returns fraction of correct predictions.
+     */
     @Override
     public float testTask(String id, String path, String dataType, int batchSize) throws MLManagerException {
         Task task = taskManager.getTask(id);

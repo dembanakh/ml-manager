@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Utility {
 
-    public final static String HOME = "/home/dembanakh/";
+    public final static String HOME = System.getenv("HOME") + File.separator;
     public final static String ROOT = HOME + ".ml-manager/";
     public final static String WEIGHTS = ROOT + "tasks-weights/";
     public final static String DATASETS = ROOT + "datasets/";
@@ -26,10 +26,13 @@ public class Utility {
     }
 
     public enum DataType {
+        // Lets easily add another data-types such as text or even sound
         IMAGE
     }
 
-
+    /*
+     * Constructs a batch from an array of files.
+     */
     static Batch filesToBatch(File[] f, DataType type, int batchSize) throws IOException {
         switch (type) {
             case IMAGE:
@@ -50,6 +53,9 @@ public class Utility {
         return null;
     }
 
+    /*
+     * Converts a sample path "<>/samples/<file>.<ext>" to a label path "<>/labels/<file>.txt"
+     */
     public static String sampleToLabelPath(String path) throws IOException {
         String[] spl = path.split("\\.");
         if (spl.length < 2) throw new IOException("path specified is not a file");

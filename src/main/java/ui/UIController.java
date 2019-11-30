@@ -1,6 +1,7 @@
 package ui;
 
 import client.ClientController;
+import client.FailedToGetRMIStub;
 import ui.actions.UIAction;
 import ui.actions.UIActions;
 
@@ -13,7 +14,7 @@ public class UIController {
 
     public static Stack<UIAction> memory = new Stack<>();
 
-    public UIController() {
+    public UIController() throws FailedToGetRMIStub {
         scanner = new Scanner(System.in);
         controller = new ClientController();
         memory.push(UIActions.ROOT);

@@ -25,12 +25,13 @@ public class ClientController {
 
     public static Errno errno = Errno.NONE;
 
-    public ClientController() {
+    public ClientController() throws FailedToGetRMIStub {
         try {
             server = (ServerAPI) Naming.lookup("rmi://40.87.143.114:1099/ServerAPI");
             //System.out.println(server);
         } catch (Exception e) {
             //e.printStackTrace();
+            throw new FailedToGetRMIStub();
         }
         currentTask = null;
     }
@@ -107,6 +108,9 @@ public class ClientController {
         return currentTask;
     }
 
+    /*
+     * Check if task was not concurrently modified or deleted from some other client.
+     */
     @Remote
     public boolean checkCurrentTaskValidity() {
         try {
@@ -122,6 +126,9 @@ public class ClientController {
         }
     }
 
+    /*
+     * Returns false if an error occurred and errno set correspondingly
+     */
     @Remote
     public boolean trainCurrentTask() {
         try {
@@ -194,9 +201,13 @@ public class ClientController {
         }
     }
 
+    /*
+     * Constructs a batch provider and checks if @param path exists locally.
+     */
     public boolean processLocalTestPath(String path) {
         try {
             currentProvider = new BatchProvider(path, Utility.DataType.IMAGE, 1, true);
+            // batchSize could be anything but Azure server does not have much RAM
             return true;
         } catch (IOException e) {
             //e.printStackTrace();
@@ -205,6 +216,9 @@ public class ClientController {
         }
     }
 
+    /*
+     * Constructs a batch provider and checks if @param path exists remotely.
+     */
     @Remote
     public boolean processRemoteTestPath(String path) {
         try {

@@ -4,6 +4,9 @@ import com.mongodb.*;
 
 import java.net.UnknownHostException;
 
+/*
+ * Class responsible for connection with MongoDB collection of tasks.
+ */
 class Database {
 
     private DB database;
@@ -54,6 +57,9 @@ class Database {
         tasks.findAndModify(new BasicDBObject("title", id), new BasicDBObject("$set", new BasicDBObject("net", net)));
     }
 
+    /*
+     * Relational mapping of Task class to MongoDB entry.
+     */
     private static DBObject toDBObject(Task task) {
         return new BasicDBObject("_id", task.getTitle())
                 .append("title", task.getTitle())

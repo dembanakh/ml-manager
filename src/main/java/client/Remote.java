@@ -7,5 +7,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
-public @interface Remote {
+@interface Remote {
+    /*
+     * Indicates that an annotated method calls some methods of the ServerAPI field.
+     */
 }

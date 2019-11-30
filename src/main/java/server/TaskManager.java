@@ -7,7 +7,6 @@ import utility.Utility;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -58,7 +57,7 @@ class TaskManager {
         try {
             Files.delete(Paths.get(Utility.WEIGHTS + taskName + ".h5"));
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
