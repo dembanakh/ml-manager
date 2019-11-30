@@ -16,7 +16,8 @@ JNIEXPORT jboolean JNICALL Java_server_MLManager_train(JNIEnv * env, jobject thi
     //std::cout << "Initialized" << std::endl;
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("import os");
-    PyRun_SimpleString("os.chdir('target/cpp')");
+    PyRun_SimpleString("from os.path import expanduser")
+    PyRun_SimpleString("os.chdir(expanduser('~') + '/ml-manager/target/cpp')");
     PyRun_SimpleString("sys.path.append(os.getcwd())");
 
     pName = PyString_FromString("py_train");
@@ -145,7 +146,8 @@ JNIEXPORT jint JNICALL Java_server_MLManager_testLocal
     //std::cout << "Initialized" << std::endl;
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("import os");
-    PyRun_SimpleString("os.chdir('target/cpp')");
+    PyRun_SimpleString("from os.path import expanduser")
+    PyRun_SimpleString("os.chdir(expanduser('~') + '/ml-manager/target/cpp')");
     PyRun_SimpleString("sys.path.append(os.getcwd())");
     _import_array();
 
@@ -215,7 +217,8 @@ JNIEXPORT jfloat JNICALL Java_server_MLManager_testRemote
     //std::cout << "Initialized" << std::endl;
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("import os");
-    PyRun_SimpleString("os.chdir('target/cpp')");
+    PyRun_SimpleString("from os.path import expanduser")
+    PyRun_SimpleString("os.chdir(expanduser('~') + '/ml-manager/target/cpp')");
     PyRun_SimpleString("sys.path.append(os.getcwd())");
     _import_array();
 
