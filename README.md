@@ -11,7 +11,7 @@ mvn clean && mvn install && java -Djava.security.policy=client.policy -cp target
 ```
 in shell, having installed and in the path maven and java.
 You will be provided with instructions in the command line while ml-manager is running.
-Custom datasets should have the following structure:
+Custom datasets should have the following structure:<br/>
 datasetName
 - samples
   - sample1Name.ext
