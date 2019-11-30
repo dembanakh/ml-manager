@@ -11,6 +11,16 @@ mvn clean && mvn install && java -Djava.security.policy=client.policy -cp target
 ```
 in shell, having installed and in the path maven and java.
 You will be provided with instructions in the command line while ml-manager is running.
+Custom datasets should have the following structure:
+<datasetName>
+- samples
+  - <sample1>.<ext>
+  - <sample2>.<ext>
+  ...
+- labels
+  - <sample1>.txt
+  - <sample2>.txt
+  ...
 
 # Implementation
 Project uses JavaRMI to communicate with the server, JavaNativeInterface to train/test tasks and MongoDB API to connect with a database, containing task list. Besides Java and C++, project uses Python's Tensorflow to take advantage of Python's ML nature. Remote operations (involving the change of tasks Map) are safe and synchronized.
