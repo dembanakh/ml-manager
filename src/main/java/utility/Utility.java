@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 public class Utility {
 
+    public final static String RMISTUB = "rmi://40.87.143.114:1099/ServerAPI";
+
     public final static String HOME = System.getenv("HOME") + File.separator;
     public final static String ROOT = HOME + ".ml-manager/";
     public final static String WEIGHTS = ROOT + "tasks-weights/";

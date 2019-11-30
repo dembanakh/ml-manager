@@ -27,7 +27,7 @@ public class ClientController {
 
     public ClientController() throws FailedToGetRMIStub {
         try {
-            server = (ServerAPI) Naming.lookup("rmi://40.87.143.114:1099/ServerAPI");
+            server = (ServerAPI) Naming.lookup(Utility.RMISTUB);
             //System.out.println(server);
         } catch (Exception e) {
             //e.printStackTrace();
