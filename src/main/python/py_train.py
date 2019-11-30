@@ -12,6 +12,12 @@ def train(dataset, architecture, task_name):
         elif architecture == 'MobileNet':
             from keras.applications.mobilenet import MobileNet
             model = MobileNet(weights='imagenet')
+        elif architecture == 'ResNet':
+            from keras.applications.resnet import ResNet50, preprocess_input
+            model = ResNet50(weights='imagenet')
+        elif architecture == 'DenseNet':
+            from keras.applications.densenet import DenseNet121, preprocess_input
+            model = DenseNet121(weights='imagenet')
         else:
             return 0
         model.compile(optimizer='adam', metrics=['accuracy'], loss='sparse_categorical_crossentropy')
