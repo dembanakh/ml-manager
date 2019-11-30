@@ -7,6 +7,7 @@ import utility.Utility;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,6 +19,7 @@ class NeuralNetManager {
      * Loads list of available network architectures from $HOME/ml-manager/networks.src
      */
     void load() throws NoSuchMLObjectException, FileNotFoundException {
+        /*
         String sourcePath = Utility.ROOT + "networks.src";
         Scanner scanner = new Scanner(new File(sourcePath));
         while (scanner.hasNextLine()) {
@@ -30,6 +32,9 @@ class NeuralNetManager {
                 throw new NoSuchMLObjectException();
             }
         }
+        */
+        NeuralNet[] nets = NeuralNet.values();
+        Collections.addAll(neuralNets, nets);
     }
 
     List<String> getNeuralNetNames() {
